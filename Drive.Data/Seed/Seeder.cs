@@ -29,6 +29,7 @@ namespace Drive.Data.Seed
                         {
                             Id = 1,
                             Name = "Documents",
+                            ParentFolderId = null,
                             CreatedAt = DateTime.UtcNow,
                             LastModified = DateTime.UtcNow,
                             OwnerId = 1,
@@ -55,6 +56,7 @@ namespace Drive.Data.Seed
                         {
                             Id = 4,
                             Name = "Presentations",
+                            ParentFolderId = null,
                             CreatedAt = DateTime.UtcNow,
                             LastModified = DateTime.UtcNow,
                             OwnerId = 2,
@@ -63,6 +65,7 @@ namespace Drive.Data.Seed
                         {
                             Id = 5,
                             Name = "Projects",
+                            ParentFolderId = null,
                             CreatedAt = DateTime.UtcNow,
                             LastModified = DateTime.UtcNow,
                             OwnerId = 3,
@@ -80,6 +83,7 @@ namespace Drive.Data.Seed
                         {
                             Id = 7,
                             Name = "School",
+                            ParentFolderId = null,
                             CreatedAt = DateTime.UtcNow,
                             LastModified = DateTime.UtcNow,
                             OwnerId = 4,
@@ -98,6 +102,7 @@ namespace Drive.Data.Seed
                         {
                             Id = 9,
                             Name = "Music",
+                            ParentFolderId = null,
                             CreatedAt = DateTime.UtcNow,
                             LastModified = DateTime.UtcNow,
                             OwnerId = 5,
@@ -106,6 +111,7 @@ namespace Drive.Data.Seed
                         {
                             Id = 10,
                             Name = "Books",
+                            ParentFolderId = null,
                             CreatedAt = DateTime.UtcNow,
                             LastModified = DateTime.UtcNow,
                             OwnerId = 6,
@@ -271,7 +277,7 @@ namespace Drive.Data.Seed
                         ItemId = 10,
                         ItemType = ItemType.Folder,
                         SharedById = 6,
-                        SharedWithId = 3,
+                        SharedWithId = 3,                       
                     }
                 });
 

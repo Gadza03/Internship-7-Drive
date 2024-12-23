@@ -10,9 +10,7 @@ namespace Drive.Data.Entities.Models
         public ItemType ItemType { get; set; }
         public int SharedById { get; set; }
         public int SharedWithId { get; set; }
-        public User SharedWith { get; set; } = null!;
-        public User SharedBy { get; set; } = null!;
-
-
+        public User? SharedWith { get; set; } 
+        public User? SharedBy { get; set; }
     }
 }

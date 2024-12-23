@@ -157,13 +157,13 @@ namespace Drive.Data.Migrations
                 columns: new[] { "Id", "Email", "Name", "PasswordHash", "Surname" },
                 values: new object[,]
                 {
-                    { 1, "ivan.horvat@gmail.com", "Ivan", "$2a$11$byjN71wBKBnpoU34h9mY4.riZazqE7vxkt5Dt2al47KVV0AN4/By6", "Horvat" },
-                    { 2, "ana.petrovic@gmail.com", "Ana", "$2a$11$6xMXyai0wDPPDlrP7jWnieBR10RRG1EjI3XunoS3pRlz03Im97PWe", "Petrović" },
-                    { 3, "marko.kovac@gmail.com", "Marko", "$2a$11$HvlhvG9IS.C0CN0S9Mc.IunTwJtcoKvxkiCHZrGp3Ltn9HfHDbg56", "Kovač" },
-                    { 4, "martina.matic@gmail.com", "Martina", "$2a$11$/JQoX5byAzaLBBq3ux9zBetRjo4AfXcnm5/VYobg7WxKk5pKs06oC", "Matić" },
-                    { 5, "luka.simic@gmail.com", "Luka", "$2a$11$bnaqTkYciYvp/CKqATkNBOOwvyCNbLjp.qSZ8f/.8kMLEqO0KBePq", "Šimić" },
-                    { 6, "sara.luksic@gmail.com", "Sara", "$2a$11$7hkFw833iXF0BMG5DDbJY.EtadEJ4mobd82f2JYEtAvbzGDeKqUmu", "Lukšić" },
-                    { 7, "petar.juric@gmail.com", "Petar", "$2a$11$BurPptzWXO2Iu6pWk4Cu6Oac9.VMs8Nxjbl1kkFqwjfITEpfHiaYy", "Jurić" }
+                    { 1, "ivan.horvat@gmail.com", "Ivan", "$2a$11$1qAVos4/Te7UWtC0gztuh.IofeoIcUWsmqRQ9/5rBVvi5018Uwho2", "Horvat" },
+                    { 2, "ana.petrovic@gmail.com", "Ana", "$2a$11$88MISb1vnvLTNlqGmu6wM..w2L/dE9n0be01vIOY3qrQVLLYiM3LO", "Petrović" },
+                    { 3, "marko.kovac@gmail.com", "Marko", "$2a$11$Ri0sdLqy8z9jUqyZ5ZVf9.NUNOlbj.UsKAhP9t8BS7.q9FuKwqdYC", "Kovač" },
+                    { 4, "martina.matic@gmail.com", "Martina", "$2a$11$ARs9OaQVTdNhpg8a2pnwjuEWeXw/oBFGcjmv56kvwSk/Ymn9.HM6i", "Matić" },
+                    { 5, "luka.simic@gmail.com", "Luka", "$2a$11$YGlQ2RvY4Yzw65fH9X2xou.Y9iiKCAnr29LGp2ceLWaoh/pUgrTRG", "Šimić" },
+                    { 6, "sara.luksic@gmail.com", "Sara", "$2a$11$bJhKA11o0.l7d7odwFNkD.uJHhEzXEgUziuAiH0mybWLeoXaQcfh2", "Lukšić" },
+                    { 7, "petar.juric@gmail.com", "Petar", "$2a$11$sgRhDCNwAt/.R7KnmRnlwe6PQiS7f4PNUXkTNOWEH/MrVz6l0qVQW", "Jurić" }
                 });
 
             migrationBuilder.InsertData(
@@ -171,12 +171,12 @@ namespace Drive.Data.Migrations
                 columns: new[] { "Id", "CreatedAt", "LastModified", "Name", "OwnerId", "ParentFolderId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(1696), null, "Documents", 1, null },
-                    { 4, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2175), null, "Presentations", 2, null },
-                    { 5, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2192), null, "Projects", 3, null },
-                    { 7, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2198), null, "School", 4, null },
-                    { 9, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2200), null, "Music", 5, null },
-                    { 10, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2203), null, "Books", 6, null }
+                    { 1, new DateTime(2024, 12, 23, 15, 59, 52, 913, DateTimeKind.Utc).AddTicks(5832), new DateTime(2024, 12, 23, 15, 59, 52, 913, DateTimeKind.Utc).AddTicks(5976), "Documents", 1, null },
+                    { 4, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3621), new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3622), "Presentations", 2, null },
+                    { 5, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3680), new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3681), "Projects", 3, null },
+                    { 7, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3702), new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3703), "School", 4, null },
+                    { 9, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3710), new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3711), "Music", 5, null },
+                    { 10, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3716), new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3717), "Books", 6, null }
                 });
 
             migrationBuilder.InsertData(
@@ -193,16 +193,16 @@ namespace Drive.Data.Migrations
                 columns: new[] { "Id", "Content", "CreatedAt", "FolderId", "LastModifiedAt", "Name", "OwnerId" },
                 values: new object[,]
                 {
-                    { 1, "A general document related content.", new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3408), 1, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3549), "RelatedDoc.txt", 1 },
-                    { 4, "An outline for a presentation on business development.", new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3695), 4, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3696), "PresentationIdeas.txt", 2 },
-                    { 5, "Project planning notes for a new software development project.", new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3697), 5, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3697), "ProjectPlanning.txt", 3 },
-                    { 8, "A song lyric: 'Music can change the world because it can change people.'", new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3704), 9, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3704), "Lyrics.txt", 5 },
-                    { 9, "Book review: 'A journey of a thousand pages begins with a single chapter.'", new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3706), 10, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3706), "Reviews.txt", 6 },
-                    { 11, "A quote from a classic novel: 'To be, or not to be, that is the question.'", new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3708), 10, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3722), "NovelQuote.txt", 6 },
-                    { 12, "An excerpt from a bestselling book: 'The only thing we have to fear is fear itself.'", new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3723), 10, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3723), "Books.txt", 6 },
-                    { 13, "A passage from a famous literary work: 'It was the best of times, it was the worst of times.'", new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3725), 10, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3725), "FamousWork.txt", 6 },
-                    { 14, "A snippet from a popular novel: 'In the end, we only regret the chances we didn't take.'", new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3726), 10, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3727), "Novels.txt", 6 },
-                    { 15, "a2 – b2 = (a – b)(a + b)", new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3728), 7, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3728), "ScriptForMaths.txt", 4 }
+                    { 1, "A general document related content.", new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(6956), 1, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7304), "RelatedDoc.txt", 1 },
+                    { 4, "An outline for a presentation on business development.", new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7641), 4, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7642), "PresentationIdeas.txt", 2 },
+                    { 5, "Project planning notes for a new software development project.", new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7645), 5, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7661), "ProjectPlanning.txt", 3 },
+                    { 8, "A song lyric: 'Music can change the world because it can change people.'", new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7679), 9, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7680), "Lyrics.txt", 5 },
+                    { 9, "Book review: 'A journey of a thousand pages begins with a single chapter.'", new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7684), 10, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7685), "Reviews.txt", 6 },
+                    { 11, "A quote from a classic novel: 'To be, or not to be, that is the question.'", new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7689), 10, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7690), "NovelQuote.txt", 6 },
+                    { 12, "An excerpt from a bestselling book: 'The only thing we have to fear is fear itself.'", new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7693), 10, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7694), "Books.txt", 6 },
+                    { 13, "A passage from a famous literary work: 'It was the best of times, it was the worst of times.'", new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7697), 10, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7698), "FamousWork.txt", 6 },
+                    { 14, "A snippet from a popular novel: 'In the end, we only regret the chances we didn't take.'", new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7702), 10, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7703), "Novels.txt", 6 },
+                    { 15, "a2 – b2 = (a – b)(a + b)", new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7706), 7, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7707), "ScriptForMaths.txt", 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -210,9 +210,9 @@ namespace Drive.Data.Migrations
                 columns: new[] { "Id", "CreatedAt", "LastModified", "Name", "OwnerId", "ParentFolderId" },
                 values: new object[,]
                 {
-                    { 2, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2170), null, "Business Documents", 1, 1 },
-                    { 6, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2197), null, "Python Web Scraper", 3, 5 },
-                    { 8, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2199), null, "eBook", 4, 7 }
+                    { 2, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3609), new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3612), "Business Documents", 1, 1 },
+                    { 6, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3698), new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3699), "Python Web Scraper", 3, 5 },
+                    { 8, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3706), new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3707), "eBook", 4, 7 }
                 });
 
             migrationBuilder.InsertData(
@@ -220,9 +220,9 @@ namespace Drive.Data.Migrations
                 columns: new[] { "Id", "AuthorId", "Content", "CreatedAt", "FileId", "LastModified" },
                 values: new object[,]
                 {
-                    { 1, 1, "What is this!?", new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(6103), 1, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(6245) },
-                    { 2, 2, "That is related doc.", new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(6508), 1, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(6509) },
-                    { 3, 4, "Ughhh, this is boring!", new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(6510), 15, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(6511) }
+                    { 1, 1, "What is this!?", new DateTime(2024, 12, 23, 15, 59, 52, 915, DateTimeKind.Utc).AddTicks(3307), 1, new DateTime(2024, 12, 23, 15, 59, 52, 915, DateTimeKind.Utc).AddTicks(3641) },
+                    { 2, 2, "That is related doc.", new DateTime(2024, 12, 23, 15, 59, 52, 915, DateTimeKind.Utc).AddTicks(4054), 1, new DateTime(2024, 12, 23, 15, 59, 52, 915, DateTimeKind.Utc).AddTicks(4055) },
+                    { 3, 4, "Ughhh, this is boring!", new DateTime(2024, 12, 23, 15, 59, 52, 915, DateTimeKind.Utc).AddTicks(4058), 15, new DateTime(2024, 12, 23, 15, 59, 52, 915, DateTimeKind.Utc).AddTicks(4059) }
                 });
 
             migrationBuilder.InsertData(
@@ -230,20 +230,20 @@ namespace Drive.Data.Migrations
                 columns: new[] { "Id", "Content", "CreatedAt", "FolderId", "LastModifiedAt", "Name", "OwnerId" },
                 values: new object[,]
                 {
-                    { 2, "A quote from a business strategy book: 'The only limit to our realization of tomorrow is our doubts of today.'", new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3692), 2, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3692), "BusinessDoc", 1 },
-                    { 6, "Code snippets and documentation for the Python web scraper.", new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3701), 6, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3701), "PythonLibDoc.txt", 3 },
-                    { 7, "An eBook excerpt: 'The future belongs to those who believe in the beauty of their dreams.'", new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3702), 8, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3703), "Quotes.txt", 4 }
+                    { 2, "A quote from a business strategy book: 'The only limit to our realization of tomorrow is our doubts of today.'", new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7632), 2, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7633), "BusinessDoc", 1 },
+                    { 6, "Code snippets and documentation for the Python web scraper.", new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7671), 6, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7672), "PythonLibDoc.txt", 3 },
+                    { 7, "An eBook excerpt: 'The future belongs to those who believe in the beauty of their dreams.'", new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7675), 8, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7676), "Quotes.txt", 4 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Folders",
                 columns: new[] { "Id", "CreatedAt", "LastModified", "Name", "OwnerId", "ParentFolderId" },
-                values: new object[] { 3, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2174), null, "Bills", 1, 2 });
+                values: new object[] { 3, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3617), new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3618), "Bills", 1, 2 });
 
             migrationBuilder.InsertData(
                 table: "Files",
                 columns: new[] { "Id", "Content", "CreatedAt", "FolderId", "LastModifiedAt", "Name", "OwnerId" },
-                values: new object[] { 3, "Invoices and bills for various expenses can be found here.", new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3694), 3, new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3694), "Invoice.pdf", 1 });
+                values: new object[] { 3, "Invoices and bills for various expenses can be found here.", new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7637), 3, new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7638), "Invoice.pdf", 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_AuthorId",

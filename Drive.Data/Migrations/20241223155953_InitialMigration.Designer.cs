@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Drive.Data.Migrations
 {
     [DbContext(typeof(DriveDbContext))]
-    [Migration("20241220180651_InitialMigration")]
+    [Migration("20241223155953_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -62,27 +62,27 @@ namespace Drive.Data.Migrations
                             Id = 1,
                             AuthorId = 1,
                             Content = "What is this!?",
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(6103),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 915, DateTimeKind.Utc).AddTicks(3307),
                             FileId = 1,
-                            LastModified = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(6245)
+                            LastModified = new DateTime(2024, 12, 23, 15, 59, 52, 915, DateTimeKind.Utc).AddTicks(3641)
                         },
                         new
                         {
                             Id = 2,
                             AuthorId = 2,
                             Content = "That is related doc.",
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(6508),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 915, DateTimeKind.Utc).AddTicks(4054),
                             FileId = 1,
-                            LastModified = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(6509)
+                            LastModified = new DateTime(2024, 12, 23, 15, 59, 52, 915, DateTimeKind.Utc).AddTicks(4055)
                         },
                         new
                         {
                             Id = 3,
                             AuthorId = 4,
                             Content = "Ughhh, this is boring!",
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(6510),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 915, DateTimeKind.Utc).AddTicks(4058),
                             FileId = 15,
-                            LastModified = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(6511)
+                            LastModified = new DateTime(2024, 12, 23, 15, 59, 52, 915, DateTimeKind.Utc).AddTicks(4059)
                         });
                 });
 
@@ -125,9 +125,9 @@ namespace Drive.Data.Migrations
                         {
                             Id = 1,
                             Content = "A general document related content.",
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3408),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(6956),
                             FolderId = 1,
-                            LastModifiedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3549),
+                            LastModifiedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7304),
                             Name = "RelatedDoc.txt",
                             OwnerId = 1
                         },
@@ -135,9 +135,9 @@ namespace Drive.Data.Migrations
                         {
                             Id = 2,
                             Content = "A quote from a business strategy book: 'The only limit to our realization of tomorrow is our doubts of today.'",
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3692),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7632),
                             FolderId = 2,
-                            LastModifiedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3692),
+                            LastModifiedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7633),
                             Name = "BusinessDoc",
                             OwnerId = 1
                         },
@@ -145,9 +145,9 @@ namespace Drive.Data.Migrations
                         {
                             Id = 3,
                             Content = "Invoices and bills for various expenses can be found here.",
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3694),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7637),
                             FolderId = 3,
-                            LastModifiedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3694),
+                            LastModifiedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7638),
                             Name = "Invoice.pdf",
                             OwnerId = 1
                         },
@@ -155,9 +155,9 @@ namespace Drive.Data.Migrations
                         {
                             Id = 4,
                             Content = "An outline for a presentation on business development.",
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3695),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7641),
                             FolderId = 4,
-                            LastModifiedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3696),
+                            LastModifiedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7642),
                             Name = "PresentationIdeas.txt",
                             OwnerId = 2
                         },
@@ -165,9 +165,9 @@ namespace Drive.Data.Migrations
                         {
                             Id = 5,
                             Content = "Project planning notes for a new software development project.",
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3697),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7645),
                             FolderId = 5,
-                            LastModifiedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3697),
+                            LastModifiedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7661),
                             Name = "ProjectPlanning.txt",
                             OwnerId = 3
                         },
@@ -175,9 +175,9 @@ namespace Drive.Data.Migrations
                         {
                             Id = 6,
                             Content = "Code snippets and documentation for the Python web scraper.",
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3701),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7671),
                             FolderId = 6,
-                            LastModifiedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3701),
+                            LastModifiedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7672),
                             Name = "PythonLibDoc.txt",
                             OwnerId = 3
                         },
@@ -185,9 +185,9 @@ namespace Drive.Data.Migrations
                         {
                             Id = 7,
                             Content = "An eBook excerpt: 'The future belongs to those who believe in the beauty of their dreams.'",
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3702),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7675),
                             FolderId = 8,
-                            LastModifiedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3703),
+                            LastModifiedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7676),
                             Name = "Quotes.txt",
                             OwnerId = 4
                         },
@@ -195,9 +195,9 @@ namespace Drive.Data.Migrations
                         {
                             Id = 8,
                             Content = "A song lyric: 'Music can change the world because it can change people.'",
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3704),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7679),
                             FolderId = 9,
-                            LastModifiedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3704),
+                            LastModifiedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7680),
                             Name = "Lyrics.txt",
                             OwnerId = 5
                         },
@@ -205,9 +205,9 @@ namespace Drive.Data.Migrations
                         {
                             Id = 9,
                             Content = "Book review: 'A journey of a thousand pages begins with a single chapter.'",
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3706),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7684),
                             FolderId = 10,
-                            LastModifiedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3706),
+                            LastModifiedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7685),
                             Name = "Reviews.txt",
                             OwnerId = 6
                         },
@@ -215,9 +215,9 @@ namespace Drive.Data.Migrations
                         {
                             Id = 11,
                             Content = "A quote from a classic novel: 'To be, or not to be, that is the question.'",
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3708),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7689),
                             FolderId = 10,
-                            LastModifiedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3722),
+                            LastModifiedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7690),
                             Name = "NovelQuote.txt",
                             OwnerId = 6
                         },
@@ -225,9 +225,9 @@ namespace Drive.Data.Migrations
                         {
                             Id = 12,
                             Content = "An excerpt from a bestselling book: 'The only thing we have to fear is fear itself.'",
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3723),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7693),
                             FolderId = 10,
-                            LastModifiedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3723),
+                            LastModifiedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7694),
                             Name = "Books.txt",
                             OwnerId = 6
                         },
@@ -235,9 +235,9 @@ namespace Drive.Data.Migrations
                         {
                             Id = 13,
                             Content = "A passage from a famous literary work: 'It was the best of times, it was the worst of times.'",
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3725),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7697),
                             FolderId = 10,
-                            LastModifiedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3725),
+                            LastModifiedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7698),
                             Name = "FamousWork.txt",
                             OwnerId = 6
                         },
@@ -245,9 +245,9 @@ namespace Drive.Data.Migrations
                         {
                             Id = 14,
                             Content = "A snippet from a popular novel: 'In the end, we only regret the chances we didn't take.'",
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3726),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7702),
                             FolderId = 10,
-                            LastModifiedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3727),
+                            LastModifiedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7703),
                             Name = "Novels.txt",
                             OwnerId = 6
                         },
@@ -255,9 +255,9 @@ namespace Drive.Data.Migrations
                         {
                             Id = 15,
                             Content = "a2 – b2 = (a – b)(a + b)",
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3728),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7706),
                             FolderId = 7,
-                            LastModifiedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(3728),
+                            LastModifiedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(7707),
                             Name = "ScriptForMaths.txt",
                             OwnerId = 4
                         });
@@ -298,14 +298,16 @@ namespace Drive.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(1696),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 913, DateTimeKind.Utc).AddTicks(5832),
+                            LastModified = new DateTime(2024, 12, 23, 15, 59, 52, 913, DateTimeKind.Utc).AddTicks(5976),
                             Name = "Documents",
                             OwnerId = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2170),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3609),
+                            LastModified = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3612),
                             Name = "Business Documents",
                             OwnerId = 1,
                             ParentFolderId = 1
@@ -313,7 +315,8 @@ namespace Drive.Data.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2174),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3617),
+                            LastModified = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3618),
                             Name = "Bills",
                             OwnerId = 1,
                             ParentFolderId = 2
@@ -321,21 +324,24 @@ namespace Drive.Data.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2175),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3621),
+                            LastModified = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3622),
                             Name = "Presentations",
                             OwnerId = 2
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2192),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3680),
+                            LastModified = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3681),
                             Name = "Projects",
                             OwnerId = 3
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2197),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3698),
+                            LastModified = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3699),
                             Name = "Python Web Scraper",
                             OwnerId = 3,
                             ParentFolderId = 5
@@ -343,14 +349,16 @@ namespace Drive.Data.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2198),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3702),
+                            LastModified = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3703),
                             Name = "School",
                             OwnerId = 4
                         },
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2199),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3706),
+                            LastModified = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3707),
                             Name = "eBook",
                             OwnerId = 4,
                             ParentFolderId = 7
@@ -358,14 +366,16 @@ namespace Drive.Data.Migrations
                         new
                         {
                             Id = 9,
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2200),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3710),
+                            LastModified = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3711),
                             Name = "Music",
                             OwnerId = 5
                         },
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2024, 12, 20, 18, 6, 51, 248, DateTimeKind.Utc).AddTicks(2203),
+                            CreatedAt = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3716),
+                            LastModified = new DateTime(2024, 12, 23, 15, 59, 52, 914, DateTimeKind.Utc).AddTicks(3717),
                             Name = "Books",
                             OwnerId = 6
                         });
@@ -457,7 +467,7 @@ namespace Drive.Data.Migrations
                             Id = 1,
                             Email = "ivan.horvat@gmail.com",
                             Name = "Ivan",
-                            PasswordHash = "$2a$11$byjN71wBKBnpoU34h9mY4.riZazqE7vxkt5Dt2al47KVV0AN4/By6",
+                            PasswordHash = "$2a$11$1qAVos4/Te7UWtC0gztuh.IofeoIcUWsmqRQ9/5rBVvi5018Uwho2",
                             Surname = "Horvat"
                         },
                         new
@@ -465,7 +475,7 @@ namespace Drive.Data.Migrations
                             Id = 2,
                             Email = "ana.petrovic@gmail.com",
                             Name = "Ana",
-                            PasswordHash = "$2a$11$6xMXyai0wDPPDlrP7jWnieBR10RRG1EjI3XunoS3pRlz03Im97PWe",
+                            PasswordHash = "$2a$11$88MISb1vnvLTNlqGmu6wM..w2L/dE9n0be01vIOY3qrQVLLYiM3LO",
                             Surname = "Petrović"
                         },
                         new
@@ -473,7 +483,7 @@ namespace Drive.Data.Migrations
                             Id = 3,
                             Email = "marko.kovac@gmail.com",
                             Name = "Marko",
-                            PasswordHash = "$2a$11$HvlhvG9IS.C0CN0S9Mc.IunTwJtcoKvxkiCHZrGp3Ltn9HfHDbg56",
+                            PasswordHash = "$2a$11$Ri0sdLqy8z9jUqyZ5ZVf9.NUNOlbj.UsKAhP9t8BS7.q9FuKwqdYC",
                             Surname = "Kovač"
                         },
                         new
@@ -481,7 +491,7 @@ namespace Drive.Data.Migrations
                             Id = 4,
                             Email = "martina.matic@gmail.com",
                             Name = "Martina",
-                            PasswordHash = "$2a$11$/JQoX5byAzaLBBq3ux9zBetRjo4AfXcnm5/VYobg7WxKk5pKs06oC",
+                            PasswordHash = "$2a$11$ARs9OaQVTdNhpg8a2pnwjuEWeXw/oBFGcjmv56kvwSk/Ymn9.HM6i",
                             Surname = "Matić"
                         },
                         new
@@ -489,7 +499,7 @@ namespace Drive.Data.Migrations
                             Id = 5,
                             Email = "luka.simic@gmail.com",
                             Name = "Luka",
-                            PasswordHash = "$2a$11$bnaqTkYciYvp/CKqATkNBOOwvyCNbLjp.qSZ8f/.8kMLEqO0KBePq",
+                            PasswordHash = "$2a$11$YGlQ2RvY4Yzw65fH9X2xou.Y9iiKCAnr29LGp2ceLWaoh/pUgrTRG",
                             Surname = "Šimić"
                         },
                         new
@@ -497,7 +507,7 @@ namespace Drive.Data.Migrations
                             Id = 6,
                             Email = "sara.luksic@gmail.com",
                             Name = "Sara",
-                            PasswordHash = "$2a$11$7hkFw833iXF0BMG5DDbJY.EtadEJ4mobd82f2JYEtAvbzGDeKqUmu",
+                            PasswordHash = "$2a$11$bJhKA11o0.l7d7odwFNkD.uJHhEzXEgUziuAiH0mybWLeoXaQcfh2",
                             Surname = "Lukšić"
                         },
                         new
@@ -505,7 +515,7 @@ namespace Drive.Data.Migrations
                             Id = 7,
                             Email = "petar.juric@gmail.com",
                             Name = "Petar",
-                            PasswordHash = "$2a$11$BurPptzWXO2Iu6pWk4Cu6Oac9.VMs8Nxjbl1kkFqwjfITEpfHiaYy",
+                            PasswordHash = "$2a$11$sgRhDCNwAt/.R7KnmRnlwe6PQiS7f4PNUXkTNOWEH/MrVz6l0qVQW",
                             Surname = "Jurić"
                         });
                 });

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Drive.Data.Entities.Models;
 using File = Drive.Data.Entities.Models.File;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Drive.Data.Seed;
 namespace Drive.Data.Entities
 {
     public class DriveDbContext : DbContext
@@ -18,7 +19,6 @@ namespace Drive.Data.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<User>()
                 .HasKey(u => u.Id);
 
@@ -60,7 +60,7 @@ namespace Drive.Data.Entities
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Share>()
-                .HasKey(s => s.Id);
+               .HasKey(s => s.Id);
 
             modelBuilder.Entity<Share>()
                 .HasOne(s => s.SharedBy)
@@ -89,19 +89,19 @@ namespace Drive.Data.Entities
                 .HasForeignKey(c =>c.AuthorId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            Seed.Seeder.Seed(modelBuilder);
+            Seeder.Seed(modelBuilder);
             base.OnModelCreating(modelBuilder);
         }
     }
-    
+
     public class DriveDbContextFactory : IDesignTimeDbContextFactory<DriveDbContext>
     {
         public DriveDbContext CreateDbContext(string[] args)
         {
             var config = new ConfigurationBuilder()
-           .SetBasePath(Directory.GetCurrentDirectory())
-           .AddXmlFile("App.config")
-           .Build();
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddXmlFile("App.config")
+                .Build();
 
             config.Providers
                 .First()
@@ -115,6 +115,7 @@ namespace Drive.Data.Entities
             return new DriveDbContext(options);
         }
     }
+
 
 
 }
