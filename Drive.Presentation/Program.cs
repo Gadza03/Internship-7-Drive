@@ -1,7 +1,10 @@
-﻿internal class Program
+﻿using Drive.Presentation.Actions.MenuOptions;
+
+internal class Program
 {
     private static void Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
+        var mainMenu = new MainMenu();
+        mainMenu.Open();
     }
 }
