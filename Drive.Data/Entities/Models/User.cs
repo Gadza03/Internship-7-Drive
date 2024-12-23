@@ -19,6 +19,12 @@ namespace Drive.Data.Entities.Models
             this.Email = email;
             this.PasswordHash = passwordHash;
         }
-
+        public User(string name, string surname, string email, string passwordHash)
+        {           
+            this.Name = name;
+            this.Surname = surname;
+            this.Email = email;
+            this.PasswordHash = passwordHash;
+        }
     }
 }
