@@ -23,18 +23,15 @@ namespace Drive.Presentation.Actions.UserRegister
             var userByMail = GetUserByMail();
             while (true)
             {
+                var lastAttemptTime = DateTime.Now;
                 Console.Write("Password: ");
                 var password = Console.ReadLine();           
                     
                 if (IsPasswordValid(userByMail, password) == ResponseResultType.Success)
                     break;
-                Console.WriteLine("Password is invalid. Try again.");
-                Console.ReadKey();
+                Console.WriteLine("Password is invalid. Try again after 30 seconds.");
+                Thread.Sleep(5000);   //5s
             }
-
-            
-                   
-
         }
         private ResponseResultType IsPasswordValid(User user, string password)
         {

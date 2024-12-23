@@ -2,8 +2,7 @@
 using Drive.Domain.Repositories;
 using Drive.Presentation.Abstractions;
 using Drive.Domain.Enums;
-using System.Globalization;
-using System.Text.RegularExpressions;
+using Drive.Presentation.Utils;
 
 namespace Drive.Presentation.Actions.UserRegister
 {
@@ -24,6 +23,11 @@ namespace Drive.Presentation.Actions.UserRegister
             var email = EnterNewMail();
             var password = EnterNewPassword();
             var confirmedPassword = IsPasswordMatch(password);
+            var captcha = Captcha.GenerateCaptcha();
+            Console.WriteLine($"Captcha: {captcha}.\n Type captcha to verify you are human enter to exit:");
+            if (!Captcha.ValidateCaptcha(captcha))
+                return;
+
             var user = new User(firstName, lastName, email, HashPassword(password));
             var responseResult = _userRepository.Add(user);
             if (responseResult == ResponseResultType.Success)
@@ -33,7 +37,7 @@ namespace Drive.Presentation.Actions.UserRegister
             }               
 
         }
-
+        
         private string EnterNewMail()
         {
             while (true)
