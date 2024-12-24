@@ -3,19 +3,19 @@ namespace Drive.Presentation.Abstractions
 {
     public class BaseMenuAction : IMenuAction
     {
-        public int MenuIndex { get; set; }
-        public string Name { get; set; } = "NoName action";
+        public int MenuIndex { get; set; } = -1;
+        public string Name { get; set; } = "default";
         public IList<IAction> Actions { get; set; }
 
-        public BaseMenuAction(IList<IAction> actions)
+        public BaseMenuAction(IList<IAction> actions, string name = "Default")
         {
-           
-            Actions = actions;
-            Actions.Add(new ExitAction());
+            
+            Actions = actions;            
             for (int i = 0; i < actions.Count; i++)
             {
                 actions[i].MenuIndex = i + 1; 
             }
+            Name = name;
         }
 
         public virtual void Open()

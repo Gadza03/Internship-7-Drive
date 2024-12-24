@@ -3,6 +3,7 @@ using Drive.Domain.Repositories;
 using Drive.Presentation.Abstractions;
 using Drive.Domain.Enums;
 using Drive.Presentation.Utils;
+using Drive.Presentation.Utils;
 
 namespace Drive.Presentation.Actions.UserRegister
 {
@@ -18,22 +19,24 @@ namespace Drive.Presentation.Actions.UserRegister
         public int MenuIndex { get; set; }
         public void Open()
         {
+
             var firstName = EnterNewName("Enter your first name: ");
             var lastName = EnterNewName("Enter your last name: ");
             var email = EnterNewMail();
             var password = EnterNewPassword();
             var confirmedPassword = IsPasswordMatch(password);
             var captcha = Captcha.GenerateCaptcha();
-            Console.WriteLine($"Captcha: {captcha}.\n Type captcha to verify you are human enter to exit:");
+            Console.WriteLine($"Captcha: {captcha}.\n Type captcha to verify you are human (enter to exit):");
             if (!Captcha.ValidateCaptcha(captcha))
                 return;
 
-            var user = new User(firstName, lastName, email, HashPassword(password));
+            var user = new User(firstName, lastName, email, Hash.HashPassword(password));
             var responseResult = _userRepository.Add(user);
             if (responseResult == ResponseResultType.Success)
             {
                 Console.WriteLine($"Welcome\nSuccessful login user {firstName}.");
                 Console.ReadKey();
+                Program.OpenMainMenu();
             }               
 
         }
@@ -43,7 +46,7 @@ namespace Drive.Presentation.Actions.UserRegister
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("Enter your mail: ");
+                Console.Write("Enter your mail: ");
                 var email = Console.ReadLine();
                 if (!_userRepository.IsValidEmail(email))
                 {
@@ -97,11 +100,6 @@ namespace Drive.Presentation.Actions.UserRegister
                 Console.ReadKey();
             }
         }
-
-
-        private string HashPassword(string password)
-        {
-            return BCrypt.Net.BCrypt.HashPassword(password);
-        }
+    
     }
 }

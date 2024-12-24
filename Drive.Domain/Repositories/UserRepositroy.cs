@@ -42,6 +42,8 @@ namespace Drive.Domain.Repositories
         }
         public bool IsValidEmail(string email)
         {
+            if (email.Contains(" "))
+                return false;            
             string pattern = @"^[^@]+@[^@]{2,}\.[^@]{3,}$";
             return Regex.IsMatch(email, pattern);
         }

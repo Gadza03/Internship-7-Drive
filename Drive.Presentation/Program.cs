@@ -4,13 +4,20 @@ using Drive.Presentation.Actions.UserRegister;
 using Drive.Presentation.Actions;
 using Drive.Domain.Factories;
 using Drive.Domain.Repositories;
-internal class Program
+using System.Security.Cryptography.Pkcs;
+class Program
 {
-    private static void Main(string[] args)
+    static void Main(string[] args)
+    {
+        OpenMainMenu();
+    }
+
+    public static void OpenMainMenu()
     {
         var actions = new List<IAction> {
             new RegisterAction(RepositoryFactory.Create<UserRepositroy>()),
-            new LogInAction(RepositoryFactory.Create<UserRepositroy>())            
+            new LogInAction(RepositoryFactory.Create<UserRepositroy>()),
+            new ExitAction()
         };
         var mainMenu = new MainMenu(actions);
         mainMenu.Open();

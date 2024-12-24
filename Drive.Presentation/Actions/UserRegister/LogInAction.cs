@@ -2,7 +2,10 @@
 using Drive.Domain.Repositories;
 using Drive.Data.Entities.Models;
 using Drive.Domain.Enums;
+using Drive.Presentation.Utils;
+using Drive.Domain.Factories;
 using Drive.Presentation.Actions.MenuOptions;
+using Drive.Presentation.Actions.MyDiskOptions;
 
 namespace Drive.Presentation.Actions.UserRegister
 {
@@ -25,17 +28,19 @@ namespace Drive.Presentation.Actions.UserRegister
             {
                 var lastAttemptTime = DateTime.Now;
                 Console.Write("Password: ");
-                var password = Console.ReadLine();           
-                    
+                var password = Console.ReadLine();
+
                 if (IsPasswordValid(userByMail, password) == ResponseResultType.Success)
                     break;
+
                 Console.WriteLine("Password is invalid. Try again after 30 seconds.");
-                Thread.Sleep(5000);   //5s
+                Thread.Sleep(5000);   //5s                
             }
+            OpenDiskMenu();
         }
         private ResponseResultType IsPasswordValid(User user, string password)
         {
-            if (VerifyPassword(password, user.PasswordHash))
+            if (Hash.VerifyPassword(password, user.PasswordHash))
                 return ResponseResultType.Success;
             return ResponseResultType.ValidationError;
         }
@@ -53,9 +58,17 @@ namespace Drive.Presentation.Actions.UserRegister
                 Console.ReadKey();
             }
         }
-        private bool VerifyPassword(string password, string hashedPassword)
+        
+        public void OpenDiskMenu()
         {
-            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+            var actions = new List<IAction> {
+                new MyDisk(RepositoryFactory.Create<UserRepositroy>()),
+                new SharedWithMe(RepositoryFactory.Create<UserRepositroy>()),
+                new ProfileSettings(RepositoryFactory.Create<UserRepositroy>()),
+                new LogOut()
+             };
+            var diskMenu = new DiskMenu(actions);
+            diskMenu.Open();
         }
     }
 }

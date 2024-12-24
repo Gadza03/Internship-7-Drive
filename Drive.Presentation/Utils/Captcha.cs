@@ -15,27 +15,21 @@ namespace Drive.Presentation.Utils
             const string letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
             const string digits = "0123456789";
 
-            var captcha = new char[length];
+            var captcha = new char[length];            
+            captcha[0] = letters[_random.Next(letters.Length)];
+            captcha[1] = digits[_random.Next(digits.Length)];
 
-            bool containsLetter = false;
-            bool containsDigit = false;
-
-            for (int i = 0; i < length; i++)
+            bool containsLetter = true;
+            bool containsDigit = true;
+            for (int i = 2; i < length; i++)
             {
-                char selectedChar;
-                if (_random.Next(2) == 0 || containsLetter && !containsDigit)
-                {
-                    selectedChar = letters[_random.Next(letters.Length)];
-                    containsLetter = true;
-                }
-                else
-                {
-                    selectedChar = digits[_random.Next(digits.Length)];
-                    containsDigit = true;
-                }
-                captcha[i] = selectedChar;
+                if (_random.Next(2) == 0)                
+                    captcha[i] = letters[_random.Next(letters.Length)];
+                
+                else                
+                    captcha[i] = digits[_random.Next(digits.Length)];                
             }
-            return new string(captcha); ;
+            return new string(captcha);
         }
 
         public static bool ValidateCaptcha(string generatedCaptcha)
