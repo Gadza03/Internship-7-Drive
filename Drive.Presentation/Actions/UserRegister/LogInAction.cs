@@ -30,20 +30,14 @@ namespace Drive.Presentation.Actions.UserRegister
                 Console.Write("Password: ");
                 var password = Console.ReadLine();
 
-                if (IsPasswordValid(userByMail, password) == ResponseResultType.Success)
+                if (_userRepository.IsPasswordValid(userByMail, password) == ResponseResultType.Success)
                     break;
 
                 Console.WriteLine("Password is invalid. Try again after 30 seconds.");
                 Thread.Sleep(5000);   //5s                
             }
-            OpenDiskMenu();
-        }
-        private ResponseResultType IsPasswordValid(User user, string password)
-        {
-            if (Hash.VerifyPassword(password, user.PasswordHash))
-                return ResponseResultType.Success;
-            return ResponseResultType.ValidationError;
-        }
+            OpenDiskMenu(userByMail);
+        }       
         private User GetUserByMail()
         {
             while (true) 
@@ -59,10 +53,10 @@ namespace Drive.Presentation.Actions.UserRegister
             }
         }
         
-        public void OpenDiskMenu()
+        public void OpenDiskMenu(User user)
         {
             var actions = new List<IAction> {
-                new MyDisk(RepositoryFactory.Create<UserRepositroy>()),
+                new MyDisk(RepositoryFactory.Create<UserRepositroy>(),RepositoryFactory.Create<FolderRepository>(), user),
                 new SharedWithMe(RepositoryFactory.Create<UserRepositroy>()),
                 new ProfileSettings(RepositoryFactory.Create<UserRepositroy>()),
                 new LogOut()

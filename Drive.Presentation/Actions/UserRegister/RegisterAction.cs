@@ -3,16 +3,19 @@ using Drive.Domain.Repositories;
 using Drive.Presentation.Abstractions;
 using Drive.Domain.Enums;
 using Drive.Presentation.Utils;
-using Drive.Presentation.Utils;
+
 
 namespace Drive.Presentation.Actions.UserRegister
 {
     public class RegisterAction : IAction
     {
         private readonly UserRepositroy _userRepository;
-        public RegisterAction(UserRepositroy userRepositroy)
+        private readonly FolderRepository _folderRepository;
+
+        public RegisterAction(UserRepositroy userRepositroy, FolderRepository folderRepository)
         {
             _userRepository = userRepositroy;
+            _folderRepository = folderRepository;
         }
         
         public string Name { get; set; } = "Register";
@@ -32,6 +35,7 @@ namespace Drive.Presentation.Actions.UserRegister
 
             var user = new User(firstName, lastName, email, Hash.HashPassword(password));
             var responseResult = _userRepository.Add(user);
+            _folderRepository.CreateRootFolder(user);
             if (responseResult == ResponseResultType.Success)
             {
                 Console.WriteLine($"Welcome\nSuccessful login user {firstName}.");

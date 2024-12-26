@@ -28,7 +28,7 @@ namespace Drive.Data.Seed
                         new Folder
                         {
                             Id = 1,
-                            Name = "Documents",
+                            Name = "Root",
                             ParentFolderId = null,
                             CreatedAt = DateTime.UtcNow,
                             LastModified = DateTime.UtcNow,
@@ -55,7 +55,7 @@ namespace Drive.Data.Seed
                         new Folder
                         {
                             Id = 4,
-                            Name = "Presentations",
+                            Name = "Root",
                             ParentFolderId = null,
                             CreatedAt = DateTime.UtcNow,
                             LastModified = DateTime.UtcNow,
@@ -64,7 +64,7 @@ namespace Drive.Data.Seed
                         new Folder
                         {
                             Id = 5,
-                            Name = "Projects",
+                            Name = "Root",
                             ParentFolderId = null,
                             CreatedAt = DateTime.UtcNow,
                             LastModified = DateTime.UtcNow,
@@ -82,7 +82,7 @@ namespace Drive.Data.Seed
                         new Folder
                         {
                             Id = 7,
-                            Name = "School",
+                            Name = "Root",
                             ParentFolderId = null,
                             CreatedAt = DateTime.UtcNow,
                             LastModified = DateTime.UtcNow,
@@ -101,7 +101,7 @@ namespace Drive.Data.Seed
                         new Folder
                         {
                             Id = 9,
-                            Name = "Music",
+                            Name = "Root",
                             ParentFolderId = null,
                             CreatedAt = DateTime.UtcNow,
                             LastModified = DateTime.UtcNow,
@@ -110,11 +110,20 @@ namespace Drive.Data.Seed
                         new Folder
                         {
                             Id = 10,
-                            Name = "Books",
+                            Name = "Root",
                             ParentFolderId = null,
                             CreatedAt = DateTime.UtcNow,
                             LastModified = DateTime.UtcNow,
                             OwnerId = 6,
+                        },
+                        new Folder
+                        {
+                            Id = 11,
+                            Name = "Root",
+                            ParentFolderId = null,
+                            CreatedAt = DateTime.UtcNow,
+                            LastModified = DateTime.UtcNow,
+                            OwnerId = 7,
                         },
                     });
           

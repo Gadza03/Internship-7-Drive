@@ -1,8 +1,8 @@
 ﻿using Drive.Data.Entities;
 using Drive.Domain.Enums;
 using Drive.Data.Entities.Models;
-using System.Xml.Serialization;
 using System.Text.RegularExpressions;
+
 
 namespace Drive.Domain.Repositories
 {
@@ -44,7 +44,7 @@ namespace Drive.Domain.Repositories
         {
             if (email.Contains(" "))
                 return false;            
-            string pattern = @"^[^@]+@[^@]{2,}\.[^@]{3,}$";
+            var pattern = @"^[^@]+@[^@]{2,}\.[^@]{3,}$";
             return Regex.IsMatch(email, pattern);
         }
         public User? EmailExists(string email)
@@ -52,17 +52,23 @@ namespace Drive.Domain.Repositories
             var foundedUser = DbContext.Users.FirstOrDefault(u => u.Email == email.Trim());
             return foundedUser;  
         }
-
-        public ResponseResultType IsPasswordValid(string password, string hashedPassword)
+        public ResponseResultType IsPasswordValid(User user, string password)
         {
-            if(VerifyPassword(password, hashedPassword))
+            if(VerifyPassword(password, user.PasswordHash))
                 return ResponseResultType.Success; 
             return ResponseResultType.NotFound;
         }
-
         private bool VerifyPassword(string password, string hashedPassword)
         {
             return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
+        public IEnumerable<T> GetFoldersOrFiles<T>(User user)
+        {
+            if (typeof(T) == typeof(Folder))
+                return DbContext.Folders.Where(u => u.OwnerId == user.Id).OrderBy(f => f.Name).Cast<T>().ToList();
+
+            return DbContext.Files.Where(u => u.OwnerId == user.Id).OrderBy(f => f.LastModifiedAt).Cast<T>().ToList();
+        }
+       
     }
 }
