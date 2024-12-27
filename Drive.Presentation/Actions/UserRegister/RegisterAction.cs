@@ -34,9 +34,18 @@ namespace Drive.Presentation.Actions.UserRegister
                 return;
 
             var user = new User(firstName, lastName, email, Hash.HashPassword(password));
-            var responseResult = _userRepository.Add(user);
-            _folderRepository.CreateRootFolder(user);
-            if (responseResult == ResponseResultType.Success)
+            var responseResultUser = _userRepository.Add(user);
+
+            var folder = new Folder
+            {
+                Name = "Root",
+                ParentFolderId = null,
+                CreatedAt = DateTime.UtcNow,
+                LastModified = DateTime.UtcNow,
+                OwnerId = user.Id,
+            };
+            var responseResultFolder = _folderRepository.Add(folder);
+            if (responseResultUser == ResponseResultType.Success)
             {
                 Console.WriteLine($"Welcome\nSuccessful login user {firstName}.");
                 Console.ReadKey();
@@ -51,7 +60,7 @@ namespace Drive.Presentation.Actions.UserRegister
             {
                 Console.Clear();
                 Console.Write("Enter your mail: ");
-                var email = Console.ReadLine();
+                var email = Console.ReadLine() ?? "";
                 if (!_userRepository.IsValidEmail(email))
                 {
                     Console.WriteLine("Invalid email format. Try again");
@@ -84,7 +93,7 @@ namespace Drive.Presentation.Actions.UserRegister
             {
                 Console.Clear();
                 Console.WriteLine("Enter your new password: ");
-                var password = Console.ReadLine();
+                var password = Console.ReadLine() ?? "";
                 if (_userRepository.IsPasswordValid(password, out var errorMessage))                
                     return password;                
 

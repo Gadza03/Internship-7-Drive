@@ -18,9 +18,7 @@ namespace Drive.Presentation.Utils
             var captcha = new char[length];            
             captcha[0] = letters[_random.Next(letters.Length)];
             captcha[1] = digits[_random.Next(digits.Length)];
-
-            bool containsLetter = true;
-            bool containsDigit = true;
+            
             for (int i = 2; i < length; i++)
             {
                 if (_random.Next(2) == 0)                
@@ -37,7 +35,7 @@ namespace Drive.Presentation.Utils
             while (true) 
             {
                 Console.WriteLine("Please enter the CAPTCHA: ");
-                string userInput = Console.ReadLine();
+                var userInput = Console.ReadLine();
                 if (string.IsNullOrEmpty(userInput))
                     return false;
 

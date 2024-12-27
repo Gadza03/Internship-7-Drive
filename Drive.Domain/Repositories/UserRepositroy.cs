@@ -67,7 +67,7 @@ namespace Drive.Domain.Repositories
             if (typeof(T) == typeof(Folder))
                 return DbContext.Folders.Where(u => u.OwnerId == user.Id).OrderBy(f => f.Name).Cast<T>().ToList();
 
-            return DbContext.Files.Where(u => u.OwnerId == user.Id).OrderBy(f => f.LastModifiedAt).Cast<T>().ToList();
+            return DbContext.Files.Where(u => u.OwnerId == user.Id).OrderByDescending(f => f.LastModifiedAt).Cast<T>().ToList();
         }
        
     }

@@ -4,7 +4,7 @@ using Drive.Data.Entities.Models;
 
 namespace Drive.Presentation.Helpers
 {
-    public static class Reader
+    public static class Writer
     {
         public static void DisplayFolder(Folder folder)
         {
@@ -16,7 +16,7 @@ namespace Drive.Presentation.Helpers
         }
         public static void DisplayFile(File file)
         {
-            Console.WriteLine($"File: {file.Name}, Last Modified: {file.LastModifiedAt}, (Parent Folder {file.Folder.Name})");
+            Console.WriteLine($"File: {file.Name}, Last Modified: {file.LastModifiedAt}, (Parent Folder: {file.Folder?.Name})");
         }
     }
 }

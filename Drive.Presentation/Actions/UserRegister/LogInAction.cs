@@ -28,7 +28,7 @@ namespace Drive.Presentation.Actions.UserRegister
             {
                 var lastAttemptTime = DateTime.Now;
                 Console.Write("Password: ");
-                var password = Console.ReadLine();
+                var password = Console.ReadLine() ?? "";
 
                 if (_userRepository.IsPasswordValid(userByMail, password) == ResponseResultType.Success)
                     break;
@@ -44,7 +44,7 @@ namespace Drive.Presentation.Actions.UserRegister
             {
                 Console.Clear();
                 Console.Write("Enter your email: ");
-                var email = Console.ReadLine();                  
+                var email = Console.ReadLine() ?? "";                  
                 var userByMail = _userRepository.EmailExists(email);
                 if (userByMail != null)
                     return userByMail;
@@ -56,7 +56,7 @@ namespace Drive.Presentation.Actions.UserRegister
         public void OpenDiskMenu(User user)
         {
             var actions = new List<IAction> {
-                new MyDisk(RepositoryFactory.Create<UserRepositroy>(),RepositoryFactory.Create<FolderRepository>(), user),
+                new MyDisk(_userRepository, RepositoryFactory.Create<FolderRepository>(), user),
                 new SharedWithMe(RepositoryFactory.Create<UserRepositroy>()),
                 new ProfileSettings(RepositoryFactory.Create<UserRepositroy>()),
                 new LogOut()

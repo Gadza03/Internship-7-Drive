@@ -1,7 +1,9 @@
 ﻿using Drive.Data.Entities.Models;
+using Drive.Domain.Enums;
 using Drive.Domain.Repositories;
 using Drive.Presentation.Abstractions;
 using Drive.Presentation.Helpers;
+using Drive.Presentation.Utils;
 using File = Drive.Data.Entities.Models.File;
 namespace Drive.Presentation.Actions.MyDiskOptions
 {
@@ -25,20 +27,26 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             var sortedFolders = _userRepository.GetFoldersOrFiles<Folder>(_user);
             var sortedFiles = _userRepository.GetFoldersOrFiles<File>(_user);
             Console.Clear();
-            if (!sortedFolders.Any() && !sortedFiles.Any())
-                Console.WriteLine("You don't have any files or folders.");
+            //if (!sortedFolders.Any() && !sortedFiles.Any())
+            //    Console.WriteLine("You don't have any files or folders.");
 
             Console.WriteLine("Your documents: ");
             foreach (var folder in sortedFolders)
             {
-                Reader.DisplayFolder(folder);
+                Writer.DisplayFolder(folder);
             }
             foreach (var file in sortedFiles)
             {
-                Reader.DisplayFile(file);
+                Writer.DisplayFile(file);
             }
             var commandAction = new CommandAction(_userRepository, _folderRepository);
             var rootFolder = _folderRepository.GetRootFolder(sortedFolders);
+            if (rootFolder is null)
+            {
+                Console.WriteLine(ResponseHandler.ErrorMessage(ResponseResultType.NotFound),"Root Folder");
+                Console.ReadKey();
+                return;
+            }
             
             commandAction.CommandPrompt(_user, rootFolder);
         }
