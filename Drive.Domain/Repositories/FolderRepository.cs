@@ -21,6 +21,11 @@ namespace Drive.Domain.Repositories
             return SaveChanges();
 
         }
+        public ResponseResultType Update(Folder folder)
+        {
+            DbContext.Folders.Update(folder);
+            return SaveChanges();
+        }
         public ResponseResultType CreateFolderOrFile(ItemType type, string name, int userId, int parentFolderId, FileRepository _fileRepository)
         {
             var responseResult = ValidateItemName(type,name, userId, parentFolderId, _fileRepository);
@@ -44,7 +49,7 @@ namespace Drive.Domain.Repositories
                            
             return ResponseResultType.Success;            
         }
-        public ResponseResultType ValidateItemName(ItemType type, string name, int userId, int parentFolderId, FileRepository _fileRepository)
+        public ResponseResultType ValidateItemName(ItemType type, string name, int userId, int? parentFolderId, FileRepository _fileRepository)
         {
             if (string.IsNullOrEmpty(name))
                 return ResponseResultType.ValidationError;
@@ -59,16 +64,28 @@ namespace Drive.Domain.Repositories
             }
             if (type == ItemType.File)
             {
-                if (_fileRepository.IsFileExists(name,userId,parentFolderId))                
+                if (_fileRepository.IsFileExistsInFolder(name,userId,parentFolderId))                
                     return ResponseResultType.AlreadyExists;                
             }
 
             return ResponseResultType.Success;
         }
-        public bool IsFolderExistsInParent(string name, int userId, int parentFolderId)
+        public bool IsFolderExistsInParent(string name, int userId, int? parentFolderId)
         {
             return DbContext.Folders.Any(f => f.Name == name && f.OwnerId == userId && f.ParentFolderId == parentFolderId);
         }
+        //public object? GetFolderOrFileForRename(string currentName, int userId, int parentFolderId, FileRepository _fileRepository)
+        //{
+        //    if (IsFolderExists(currentName, userId))
+        //    {
+        //        return GetFolderByName(currentName, userId);
+        //    }
+        //    if (_fileRepository.IsFileExistsInDrive(currentName, userId))
+        //    {
+        //        return _fileRepository.GetFileByName(currentName, userId);
+        //    }
+        //    return null;
+        //}
         public bool IsFolderExists(string name, int userId)
         {
             return DbContext.Folders.Any(f => f.Name == name && f.OwnerId == userId);

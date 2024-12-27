@@ -16,6 +16,11 @@ namespace Drive.Domain.Repositories
             DbContext.Files.Add(file);
             return SaveChanges();
         }
+        public ResponseResultType Update(File file)
+        {
+            DbContext.Files.Update(file);
+            return SaveChanges();
+        }
         public void CreateFile(string name, int userId, int parentFolderId)
         {
             var newFile = new File
@@ -30,9 +35,18 @@ namespace Drive.Domain.Repositories
             };
             Add(newFile);
         }
-        public bool IsFileExists(string name, int userId, int folderId)
+      
+        public File? GetFileByName(string name, int userId)
+        {
+            return DbContext.Files.FirstOrDefault(f => f.Name == name && f.OwnerId == userId);
+        }
+        public bool IsFileExistsInFolder(string name, int userId, int? folderId)
         {
             return DbContext.Files.Any(f => f.Name == name && f.OwnerId == userId && f.FolderId == folderId);
+        }
+        public bool IsFileExistsInDrive(string name, int userId)
+        {
+            return DbContext.Files.Any(f => f.Name == name && f.OwnerId == userId);
         }
     }
 }

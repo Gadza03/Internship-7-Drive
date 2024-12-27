@@ -61,6 +61,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
 
                         break;
                     case "rename.f":
+                        RenameItem(name,user.Id,CurrentFolder.Id);
                         break;
                     case "back":
                         var logInMenu = new LogInAction(_userRepository);
@@ -95,5 +96,64 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             CurrentFolder = enteredFolder;
             Console.WriteLine($"You entered folder - {CurrentFolder?.Name}");
         }
+        
+        public void RenameItem(string currentName, int userId, int parentFolderId)
+        {
+            
+            var folder = _folderRepository.GetFolderByName(currentName, userId);
+            if (folder != null)
+            {
+                RenameFolder(folder);
+                return;
+            }            
+            var file = _fileRepository.GetFileByName(currentName, userId);
+            if (file != null)
+            {
+                RenameFile(file);
+                return;
+            }
+          
+            Console.WriteLine("The item with the specified name does not exist.");
+        }
+        private void RenameFolder(Folder folder)
+        {
+            if (folder.Name == "Root")
+            {
+                Console.WriteLine("You can't rename Root folder!");
+                return;
+            }
+            Console.Write($"Selected folder: {folder.Name}\nEnter new name: ");            
+            var newName = Console.ReadLine().Trim();
+
+            var responseResult = _folderRepository.ValidateItemName(ItemType.Folder, newName, folder.OwnerId, folder.ParentFolderId, _fileRepository);
+            if (responseResult != ResponseResultType.Success)
+            {
+                Console.WriteLine(ResponseHandler.ErrorMessage(responseResult));
+                return;
+            }
+            folder.Name = newName;
+            folder.LastModified = DateTime.UtcNow;
+            _folderRepository.Update(folder);
+            Console.WriteLine($"Folder renamed to {newName}.");
+        }
+        private void RenameFile(File file)
+        {
+            Console.Write($"Selected file: {file.Name}\nEnter new name: ");
+            var newName = Console.ReadLine().Trim();
+
+            var responseResult = _folderRepository.ValidateItemName(ItemType.File, newName, file.OwnerId, file.FolderId, _fileRepository);
+            if (responseResult != ResponseResultType.Success)
+            {
+                Console.WriteLine(ResponseHandler.ErrorMessage(responseResult));
+                return;
+            }
+
+            file.Name = newName;
+            file.LastModifiedAt = DateTime.UtcNow;
+            _fileRepository.Update(file);
+            Console.WriteLine($"File renamed to {newName}.");
+        }
+  
+
     }
 }
