@@ -42,7 +42,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             {
                 Writer.DisplayFile(file);
             }            
-            var rootFolder = _folderRepository.GetRootFolder(sortedFolders);
+            var rootFolder = _folderRepository.GetRootFolder("Root", _user);
             if (rootFolder is null)
             {
                 Console.WriteLine(ResponseHandler.ErrorMessage(ResponseResultType.NotFound),"Root Folder");

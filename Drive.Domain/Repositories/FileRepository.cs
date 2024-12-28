@@ -22,14 +22,19 @@ namespace Drive.Domain.Repositories
             DbContext.Files.Update(file);
             return SaveChanges();
         }
-        public void CreateFile(string name, int userId, int parentFolderId)
+        public ResponseResultType Delete(File file)
+        {
+            DbContext.Files.Remove(file);
+            return SaveChanges();
+        }
+        public void CreateFile(string name, int userId, int folderId)
         {
             var newFile = new File
             {
                 Name = name,
                 Content = "",
                 OwnerId = userId,
-                FolderId = parentFolderId,
+                FolderId = folderId,
                 CreatedAt = DateTime.UtcNow,
                 LastModifiedAt = DateTime.UtcNow,
 
@@ -37,9 +42,9 @@ namespace Drive.Domain.Repositories
             Add(newFile);
         }
       
-        public File? GetFileByName(string name, User user)
+        public File? GetFileByNameAndFolder(string name, User user, int folderId)
         {
-            return DbContext.Files.FirstOrDefault(f => f.Name == name && f.OwnerId == user.Id);
+            return DbContext.Files.FirstOrDefault(f => f.Name == name && f.OwnerId == user.Id && f.FolderId == folderId);
         }
         public bool IsFileExistsInFolder(string name, int userId, int? folderId)
         {
