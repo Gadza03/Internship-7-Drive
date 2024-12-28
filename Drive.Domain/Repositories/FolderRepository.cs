@@ -26,13 +26,11 @@ namespace Drive.Domain.Repositories
             DbContext.Folders.Update(folder);
             return SaveChanges();
         }
-
         public ResponseResultType Delete(Folder folder)
         {
             DbContext.Folders.Remove(folder);
             return SaveChanges();
         }
-
         public void CreateFolder(string name, int userId, int parentFolderId)
         {
             var newFolder = new Folder
@@ -45,32 +43,7 @@ namespace Drive.Domain.Repositories
             };
 
             Add(newFolder);
-        }
-        public ResponseResultType CreateFolderOrFile(ItemType type, string name, int userId, int parentFolderId, FileRepository _fileRepository)
-        {
-            var responseResult = ValidateItemName(type,name, userId, parentFolderId, _fileRepository);
-            if (responseResult != ResponseResultType.Success)            
-                return responseResult;
-            
-            if (type == ItemType.Folder)
-            {
-                var newFolder = new Folder
-                {
-                    Name = name,
-                    ParentFolderId = parentFolderId,
-                    CreatedAt = DateTime.UtcNow,
-                    LastModified = DateTime.UtcNow,
-                    OwnerId = userId,
-                };
-                
-                Add(newFolder);
-            }
-            else
-                _fileRepository.CreateFile(name, userId, parentFolderId);
-                           
-            return ResponseResultType.Success;            
-        }
-       
+        }       
         public ResponseResultType ValidateItemName(ItemType type, string name, int userId, int? parentFolderId, FileRepository _fileRepository)
         {
             if (string.IsNullOrEmpty(name))

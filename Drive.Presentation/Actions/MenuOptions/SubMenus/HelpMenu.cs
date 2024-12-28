@@ -16,5 +16,13 @@ namespace Drive.Presentation.Actions.MenuOptions.SubMenus
                      "rename.folder/file ‘folder or file name’ to ‘new name’ – Renames the specified folder or file.\n" +
                      "back – Returns to the previous folder.\n");
         }
+
+        public static void DisplayEditCommands()
+        {
+            Console.WriteLine("\nFile Editor Commands:\n" +
+                        ":help - Display all commands\n" +
+                        ":save - Save changes and exit\n" +
+                        ":exit - Exit without saving\n");
+        }
     }
 }

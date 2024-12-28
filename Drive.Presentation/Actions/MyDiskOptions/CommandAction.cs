@@ -44,14 +44,12 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 {
                     case "help":
                         HelpMenu.DisplayCommands();
-                        break;
-                    
+                        break;                    
                     case "create.folder":
-                        CreateIte(ItemType.Folder,name, user, CurrentFolder.Id);
+                        CreateItem(ItemType.Folder,name, user, CurrentFolder.Id);
                         break;
                     case "create.file":
-                        CreateIte(ItemType.File, name, user, CurrentFolder.Id);
-
+                        CreateItem(ItemType.File, name, user, CurrentFolder.Id);
                         break;
                     case "enter.folder":
                         EnterFolder(name, user);
@@ -83,8 +81,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             var refreshFiles = new MyDisk(RepositoryFactory.Create<UserRepositroy>(), RepositoryFactory.Create<FolderRepository>(), RepositoryFactory.Create<FileRepository>(), user);
             refreshFiles.Open();
         }
-
-        private void CreateIte(ItemType type, string name, User user, int parentFolderId)
+        private void CreateItem(ItemType type, string name, User user, int parentFolderId)
         {
             var responseResult = new ResponseResultType();
             if (type == ItemType.Folder)
@@ -133,18 +130,6 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             Console.ReadKey();
             RefreshCommandPrompt(user);
         }
-        private void CreateItem(ItemType type,string name, User user, int parentFolderId)
-        {
-           var responseResult = _folderRepository.CreateFolderOrFile(type,name,user.Id,parentFolderId, _fileRepository);
-            if (responseResult == ResponseResultType.Success)
-            {
-                Console.WriteLine($"Successfuly added {type}.");
-                Console.ReadKey();
-                RefreshCommandPrompt(user);                
-            }                                   
-            else
-                Console.WriteLine(ResponseHandler.ErrorMessage(responseResult));            
-        }
         private void EnterFolder(string name, User user)
         {
             if (!_folderRepository.IsFolderExists(name, user))
@@ -162,8 +147,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             }
             
             Console.WriteLine($"You entered folder - {CurrentFolder?.Name}");
-        }
-        
+        }        
         public void DeleteItem(string currentName, User user)
         {
             var file = _fileRepository.GetFileByNameAndFolder(currentName, user, CurrentFolder.Id);
@@ -223,14 +207,92 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         }
         private void EditFile(string name, User user)
         {
-            if (!_fileRepository.IsFileExistsInDrive(name, user.Id))
+            var file = _fileRepository.GetFileByNameAndFolder(name, user, CurrentFolder.Id);
+            if (file is null)
             {
-                Console.WriteLine("Entered name of File doesn't exists.");
+                Console.WriteLine("Entered name of File doesn't exist.");
                 return;
             }
-            Console.WriteLine($"Editing file - {name}: \n Type :help for a list of commands.\n");
 
+            Console.WriteLine($"Editing file - {name}: \nType :help for a list of commands.\n");
+            Console.WriteLine($"Current Content:\n{file.Content}\n");
+
+            List<string> lines = new List<string>(file.Content?.Split(Environment.NewLine) ?? Array.Empty<string>());
+            string currentLine = "";
+            bool isSaved = false;
+
+            while (true)
+            {
+                var key = Console.ReadKey(intercept: true);
+
+                if (key.Key == ConsoleKey.Enter)
+                {
+                    if (currentLine.StartsWith(":"))
+                    {
+                        string command = currentLine.Substring(1).Trim();
+                        if (HandleCommand(command, ref lines, file, ref isSaved))
+                        {
+                            break;
+                        }
+                        currentLine = "";
+                        continue;
+                    }
+
+                    lines.Add(currentLine);
+                    currentLine = "";
+                    Console.WriteLine();
+                }
+                else if (key.Key == ConsoleKey.Backspace)
+                {
+                    if (currentLine.Length > 0)
+                    {
+                        currentLine = currentLine.Substring(0, currentLine.Length - 1);
+                        Console.Write("\b \b");
+                    }
+                    else if (lines.Count > 0)
+                    {
+                        currentLine = lines[^1];
+                        lines.RemoveAt(lines.Count - 1);
+                        Console.CursorTop--;
+                        Console.CursorLeft = 0;
+                        Console.Write(new string(' ', Console.WindowWidth));
+                        Console.CursorLeft = 0;
+                        Console.Write(currentLine);
+                    }
+                }
+                else
+                {
+                    currentLine += key.KeyChar;
+                    Console.Write(key.KeyChar);
+                }
+            }
+            Console.WriteLine(isSaved ? "File saved successfully." : "Changes were not saved.");
         }
+
+        private bool HandleCommand(string command, ref List<string> lines, File file, ref bool isSaved)
+        {
+            switch (command.ToLower())
+            {
+                case "help":
+                    HelpMenu.DisplayEditCommands();
+                    return false;
+                case "save and exit":
+                    Console.WriteLine("\nSaving changes...");
+                    file.Content = string.Join(Environment.NewLine, lines);
+                    file.LastModifiedAt = DateTime.UtcNow;
+                    _fileRepository.Update(file);
+                    isSaved = true;
+                    return true;
+                case "exit":
+                    Console.WriteLine("\nExiting without saving...");
+                    return true;
+                default:
+                    Console.WriteLine("\nUnknown command. Type :help for a list of commands.");
+                    return false;
+            }
+        }
+
+
         public void RenameItem(string currentName, User user)
         {
             if (currentName == "Root")
