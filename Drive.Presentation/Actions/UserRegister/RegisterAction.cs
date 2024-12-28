@@ -11,13 +11,15 @@ namespace Drive.Presentation.Actions.UserRegister
     {
         private readonly UserRepositroy _userRepository;
         private readonly FolderRepository _folderRepository;
+        private readonly FileRepository _fileRepository;
 
-        public RegisterAction(UserRepositroy userRepositroy, FolderRepository folderRepository)
+        public RegisterAction(UserRepositroy userRepositroy, FolderRepository folderRepository, FileRepository fileRepository)
         {
             _userRepository = userRepositroy;
             _folderRepository = folderRepository;
+            _fileRepository = fileRepository;
         }
-        
+
         public string Name { get; set; } = "Register";
         public int MenuIndex { get; set; }
         public void Open()

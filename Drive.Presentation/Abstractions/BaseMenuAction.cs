@@ -19,32 +19,31 @@ namespace Drive.Presentation.Abstractions
         }
 
         public virtual void Open()
-        {            
-            Console.Clear();
-            Console.WriteLine($"Choose from {Name}:");            
-            foreach (var action in Actions.OrderBy(a => a.MenuIndex))
+        {       
+            while (true)
             {
-                Console.WriteLine($"{action.MenuIndex}. {action.Name}");
-            }
-
-            Console.Write("\nYour choice: ");
-            if (int.TryParse(Console.ReadLine(), out int choice))
-            {
-                var selectedAction = Actions.FirstOrDefault(a => a.MenuIndex == choice);
-                if (selectedAction != null)
+                Console.Clear();
+                Console.WriteLine($"Choose from {Name}:");
+                foreach (var action in Actions.OrderBy(a => a.MenuIndex))
                 {
-                    selectedAction.Open();
-                    return;
+                    Console.WriteLine($"{action.MenuIndex}. {action.Name}");
                 }
 
-                Console.WriteLine("Invalid option. Try again.");
-            }
-            else            
+                Console.Write("\nYour choice: ");
+                if (int.TryParse(Console.ReadLine(), out int choice))
+                {
+                    var selectedAction = Actions.FirstOrDefault(a => a.MenuIndex == choice);
+                    if (selectedAction != null)
+                    {
+                        selectedAction.Open();
+                        return;
+                    }
+                }
+                
                 Console.WriteLine("Invalid format. Try again.");
-            
-
-            Console.WriteLine("\nPress any key to continue...");
-            Console.ReadKey();
+                Console.ReadKey();
+            }
+           
         }
     }
 }

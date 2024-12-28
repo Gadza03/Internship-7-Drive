@@ -86,13 +86,13 @@ namespace Drive.Domain.Repositories
         //    }
         //    return null;
         //}
-        public bool IsFolderExists(string name, int userId)
+        public bool IsFolderExists(string name, User user)
         {
-            return DbContext.Folders.Any(f => f.Name == name && f.OwnerId == userId);
+            return DbContext.Folders.Any(f => f.Name == name && f.OwnerId == user.Id);
         }
-        public Folder? GetFolderByName(string name, int userId)
+        public Folder? GetFolderByName(string name, User user)
         {
-            return DbContext.Folders.FirstOrDefault(f => f.Name == name && f.OwnerId == userId);
+            return DbContext.Folders.FirstOrDefault(f => f.Name == name && f.OwnerId == user.Id);
         }
         public Folder? GetRootFolder(IEnumerable<Folder> folders) 
         {

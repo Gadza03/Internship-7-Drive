@@ -1,4 +1,5 @@
-﻿using Drive.Domain.Repositories;
+﻿using Drive.Data.Entities.Models;
+using Drive.Domain.Repositories;
 using Drive.Presentation.Abstractions;
 
 
@@ -7,9 +8,17 @@ namespace Drive.Presentation.Actions.MyDiskOptions
     public class ProfileSettings : IAction
     {
         private readonly UserRepositroy _userRepository;
-        public ProfileSettings(UserRepositroy userRepositroy)
+        private readonly FolderRepository _folderRepository;
+        private readonly FileRepository _fileRepository;
+        private User _user { get; set; }
+
+        public ProfileSettings(UserRepositroy userRepositroy, FolderRepository folderRepository, FileRepository fileRepository, User user)
         {
             _userRepository = userRepositroy;
+            _folderRepository = folderRepository;
+            _fileRepository = fileRepository;
+            _user = user;
+
         }
         public string Name { get; set; } = "Profile Settings";
         public int MenuIndex { get; set; }

@@ -1,6 +1,7 @@
 ﻿
 
 using Drive.Data.Entities;
+using Drive.Data.Entities.Models;
 using Drive.Domain.Enums;
 using File = Drive.Data.Entities.Models.File;
 
@@ -36,9 +37,9 @@ namespace Drive.Domain.Repositories
             Add(newFile);
         }
       
-        public File? GetFileByName(string name, int userId)
+        public File? GetFileByName(string name, User user)
         {
-            return DbContext.Files.FirstOrDefault(f => f.Name == name && f.OwnerId == userId);
+            return DbContext.Files.FirstOrDefault(f => f.Name == name && f.OwnerId == user.Id);
         }
         public bool IsFileExistsInFolder(string name, int userId, int? folderId)
         {

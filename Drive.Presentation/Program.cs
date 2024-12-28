@@ -15,8 +15,8 @@ class Program
     public static void OpenMainMenu()
     {
         var actions = new List<IAction> {
-            new RegisterAction(RepositoryFactory.Create<UserRepositroy>(),RepositoryFactory.Create<FolderRepository>()),
-            new LogInAction(RepositoryFactory.Create<UserRepositroy>()),
+            new RegisterAction(RepositoryFactory.Create<UserRepositroy>(),RepositoryFactory.Create<FolderRepository>(),RepositoryFactory.Create<FileRepository>()),
+            new LogInAction(RepositoryFactory.Create<UserRepositroy>(),RepositoryFactory.Create<FolderRepository>(),RepositoryFactory.Create<FileRepository>()),
             new ExitAction()
         };
         var mainMenu = new MainMenu(actions);

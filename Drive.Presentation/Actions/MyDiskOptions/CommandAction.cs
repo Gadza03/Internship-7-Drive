@@ -17,11 +17,12 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         private readonly FolderRepository _folderRepository;
         private readonly FileRepository _fileRepository;
         private Folder? CurrentFolder {  get;  set; }
-        public CommandAction(UserRepositroy userRepository, FolderRepository folderRepository)
+        public CommandAction(UserRepositroy userRepositroy, FolderRepository folderRepository, FileRepository fileRepository)
         {
-            _userRepository = userRepository;
+            _userRepository = userRepositroy;
             _folderRepository = folderRepository;
-            _fileRepository = RepositoryFactory.Create<FileRepository>();
+            _fileRepository = fileRepository;           
+
         }
 
         public void CommandPrompt(User user, Folder parentFolder)
@@ -30,7 +31,8 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             while (true)
             {
                 Console.Write("\nEnter a command (help - for list of commands): ");
-                string[] parts = Console.ReadLine().Trim().Split(" ");
+                string input = Console.ReadLine()?.Trim() ?? "";
+                string[] parts = !string.IsNullOrEmpty(input) ? input.Split(" ") : Array.Empty<string>();
                 if (parts.Length < 1)
                 {
                     Console.WriteLine("Invalid input, try again");                    
@@ -45,14 +47,14 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                         break;
                     
                     case "create.folder":
-                        CreateItem(ItemType.Folder,name, user.Id, CurrentFolder.Id);
+                        CreateItem(ItemType.Folder,name, user, CurrentFolder.Id);
                         break;
                     case "create.file":
-                        CreateItem(ItemType.File, name, user.Id, CurrentFolder.Id);
+                        CreateItem(ItemType.File, name, user, CurrentFolder.Id);
 
                         break;
                     case "enter.folder":
-                        EnterFolder(name, user.Id);
+                        EnterFolder(name, user);
                         break;
                     case "edit.file":
 
@@ -61,10 +63,10 @@ namespace Drive.Presentation.Actions.MyDiskOptions
 
                         break;
                     case "rename.f":
-                        RenameItem(name,user.Id,CurrentFolder.Id);
+                        RenameItem(name,user,CurrentFolder.Id);
                         break;
                     case "back":
-                        var logInMenu = new LogInAction(_userRepository);
+                        var logInMenu = new LogInAction(_userRepository, _folderRepository, _fileRepository);
                         logInMenu.OpenDiskMenu(user);
                         break;
                     default:
@@ -76,46 +78,54 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 
             }
         }
-       
-        private void CreateItem(ItemType type,string name, int userId, int parentFolderId)
+        private void RefreshCommandPrompt(User user, Folder parentFolder)
         {
-           var responseResult = _folderRepository.CreateFolderOrFile(type,name,userId,parentFolderId, _fileRepository);
-            if (responseResult == ResponseResultType.Success)            
-                Console.WriteLine("Successfuly added item.");            
+            var refreshFiles = new MyDisk(RepositoryFactory.Create<UserRepositroy>(), RepositoryFactory.Create<FolderRepository>(), RepositoryFactory.Create<FileRepository>(), user);
+            refreshFiles.Open();
+        }
+        private void CreateItem(ItemType type,string name, User user, int parentFolderId)
+        {
+           var responseResult = _folderRepository.CreateFolderOrFile(type,name,user.Id,parentFolderId, _fileRepository);
+            if (responseResult == ResponseResultType.Success)
+            {
+                Console.WriteLine($"Successfuly added {type}.");
+                Console.ReadKey();
+                RefreshCommandPrompt(user, CurrentFolder);                
+            }                                   
             else
                 Console.WriteLine(ResponseHandler.ErrorMessage(responseResult));            
         }
-        private void EnterFolder(string name, int userId)
+        private void EnterFolder(string name, User user)
         {
-            if (!_folderRepository.IsFolderExists(name, userId))
+            if (!_folderRepository.IsFolderExists(name, user))
             {
                 Console.WriteLine("Entered name of folder doesn't exisits.");              
                 return;
             }            
-            var enteredFolder = _folderRepository.GetFolderByName(name, userId);
+            var enteredFolder = _folderRepository.GetFolderByName(name, user);
             CurrentFolder = enteredFolder;
             Console.WriteLine($"You entered folder - {CurrentFolder?.Name}");
         }
         
-        public void RenameItem(string currentName, int userId, int parentFolderId)
+        public void RenameItem(string currentName, User user, int parentFolderId)
         {
             
-            var folder = _folderRepository.GetFolderByName(currentName, userId);
+            var folder = _folderRepository.GetFolderByName(currentName, user);
             if (folder != null)
             {
-                RenameFolder(folder);
+                RenameFolder(folder, user);
                 return;
             }            
-            var file = _fileRepository.GetFileByName(currentName, userId);
+            var file = _fileRepository.GetFileByName(currentName, user);
             if (file != null)
             {
-                RenameFile(file);
+                RenameFile(file,user);
                 return;
             }
           
             Console.WriteLine("The item with the specified name does not exist.");
         }
-        private void RenameFolder(Folder folder)
+        private void RenameFolder(Folder folder, User user)
         {
             if (folder.Name == "Root")
             {
@@ -134,9 +144,12 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             folder.Name = newName;
             folder.LastModified = DateTime.UtcNow;
             _folderRepository.Update(folder);
-            Console.WriteLine($"Folder renamed to {newName}.");
+            Console.WriteLine($"Folder renamed to {newName}. \tRefreshing...");
+            Console.ReadKey();
+            RefreshCommandPrompt(user, CurrentFolder);
+
         }
-        private void RenameFile(File file)
+        private void RenameFile(File file, User user)
         {
             Console.Write($"Selected file: {file.Name}\nEnter new name: ");
             var newName = Console.ReadLine().Trim();
@@ -151,7 +164,9 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             file.Name = newName;
             file.LastModifiedAt = DateTime.UtcNow;
             _fileRepository.Update(file);
-            Console.WriteLine($"File renamed to {newName}.");
+            Console.WriteLine($"File renamed to {newName}.\tRefreshing...");
+            Console.ReadKey();
+            RefreshCommandPrompt(user, CurrentFolder);
         }
   
 

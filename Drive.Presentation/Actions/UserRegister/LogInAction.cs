@@ -13,9 +13,13 @@ namespace Drive.Presentation.Actions.UserRegister
     public class LogInAction : IAction
     {
         private readonly UserRepositroy _userRepository;
-        public LogInAction(UserRepositroy userRepositroy)
+        private readonly FolderRepository _folderRepository;
+        private readonly FileRepository _fileRepository;
+        public LogInAction(UserRepositroy userRepositroy, FolderRepository folderRepository, FileRepository fileRepository)
         {
             _userRepository = userRepositroy;
+            _folderRepository = folderRepository;
+            _fileRepository = fileRepository;
         }
 
         public string Name { get; set; } = "Log in";
@@ -56,9 +60,9 @@ namespace Drive.Presentation.Actions.UserRegister
         public void OpenDiskMenu(User user)
         {
             var actions = new List<IAction> {
-                new MyDisk(_userRepository, RepositoryFactory.Create<FolderRepository>(), user),
-                new SharedWithMe(RepositoryFactory.Create<UserRepositroy>()),
-                new ProfileSettings(RepositoryFactory.Create<UserRepositroy>()),
+                new MyDisk(_userRepository, _folderRepository,_fileRepository, user),
+                new SharedWithMe(_userRepository, _folderRepository,_fileRepository, user),
+                new ProfileSettings(_userRepository, _folderRepository,_fileRepository, user),
                 new LogOut()
              };
             var diskMenu = new DiskMenu(actions);

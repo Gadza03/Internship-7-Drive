@@ -11,12 +11,15 @@ namespace Drive.Presentation.Actions.MyDiskOptions
     {
         private readonly UserRepositroy _userRepository;
         private readonly FolderRepository _folderRepository;
+        private readonly FileRepository _fileRepository;
+
 
         private User _user {  get; set; }
-        public MyDisk(UserRepositroy userRepositroy, FolderRepository folderRepository, User user)
+        public MyDisk(UserRepositroy userRepositroy, FolderRepository folderRepository,FileRepository fileRepository, User user)
         {
             _userRepository = userRepositroy;
             _folderRepository = folderRepository;
+            _fileRepository = fileRepository;
             _user = user;
         }
         public string Name { get; set; } = "My Disk";
@@ -38,8 +41,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             foreach (var file in sortedFiles)
             {
                 Writer.DisplayFile(file);
-            }
-            var commandAction = new CommandAction(_userRepository, _folderRepository);
+            }            
             var rootFolder = _folderRepository.GetRootFolder(sortedFolders);
             if (rootFolder is null)
             {
@@ -47,7 +49,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 Console.ReadKey();
                 return;
             }
-            
+            var commandAction = new CommandAction(_userRepository, _folderRepository, _fileRepository);
             commandAction.CommandPrompt(_user, rootFolder);
         }
     }
