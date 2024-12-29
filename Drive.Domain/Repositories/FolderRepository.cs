@@ -74,10 +74,6 @@ namespace Drive.Domain.Repositories
             return DbContext.Folders.Any(f => f.Name == name && f.OwnerId == userId && f.ParentFolderId == parentFolderId);
         }
         
-        public bool IsFolderExists(string name, User user)
-        {
-            return DbContext.Folders.Any(f => f.Name == name && f.OwnerId == user.Id);
-        }
         public List<Folder> GetFileByParentFolderAndOwner(Folder parentFolder, User owner)
         {
             return DbContext.Folders.Where(f => f.ParentFolderId == parentFolder.Id && f.OwnerId == owner.Id).ToList();

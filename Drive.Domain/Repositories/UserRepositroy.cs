@@ -2,8 +2,7 @@
 using Drive.Domain.Enums;
 using Drive.Data.Entities.Models;
 using System.Text.RegularExpressions;
-using Drive.Data.Enums;
-using Microsoft.EntityFrameworkCore;
+
 
 
 namespace Drive.Domain.Repositories
@@ -71,33 +70,8 @@ namespace Drive.Domain.Repositories
 
             return DbContext.Files.Where(u => u.OwnerId == user.Id).OrderByDescending(f => f.LastModifiedAt).Cast<T>().ToList();
         }
-        public IEnumerable<T> GetFoldersOrFilesSharedWithUser<T>(User user)
-        {
-            if (typeof(T) == typeof(Folder))
-                return DbContext.SharedItems
-                    .Where(s => s.SharedWithId == user.Id && s.ItemType == ItemType.Folder)
-                    .Join(
-                        DbContext.Folders.Include(f => f.Owner),
-                        share => share.ItemId,
-                        folder => folder.Id,
-                        (share, folder) => folder
-                    )
-                    .OrderBy(folder => folder.Name)
-                    .Cast<T>()
-                    .ToList();
+        
 
-            return DbContext.SharedItems
-                .Where(s => s.SharedWithId == user.Id)
-                .Join(
-                    DbContext.Files.Include(f => f.Owner).Include(f => f.Folder),
-                    share => share.ItemId,
-                    file => file.Id,
-                    (share, file) => file
-                 )
-                .OrderByDescending(file => file.LastModifiedAt)
-                .Cast<T>()
-                .ToList();
-        }
         public User? GetUserByMail(string email)
         {
             return DbContext.Users.FirstOrDefault(u => u.Email == email);

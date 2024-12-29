@@ -19,12 +19,22 @@ namespace Drive.Presentation.Actions.MenuOptions.SubMenus
                      "back – Returns to the previous folder.\n");
         }
 
-        public static void DisplayEditCommands()
+        public static void DisplayEditFileCommands()
         {
             Console.WriteLine("\nFile Editor Commands:\n" +
                         ":help - Display all commands\n" +
                         ":save and exit - Save changes and exit\n" +
                         ":exit - Exit without saving\n");
+        }
+        public static void DisplayEditSharedItemsCommands()
+        {
+            Console.WriteLine("\nAvailable Commands:\n" +
+                    "help – Displays all available commands.\n" +                    
+                    "enter.folder ‘folder name’ – Navigates into the specified folder.\n" +
+                    "edit.file ‘file name’ – Edits the specified file.\n" +
+                    "delete.f ‘folder or file name’ – Deletes the specified folder or file.\n" +
+                    "rename.f ‘folder or file name’ to ‘new name’ – Renames the specified folder or file.\n" +                    
+                    "back – Returns to the previous folder.\n");
         }
     }
 }

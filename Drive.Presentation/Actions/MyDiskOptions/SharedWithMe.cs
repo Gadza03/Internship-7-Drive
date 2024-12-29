@@ -1,6 +1,7 @@
 ﻿using Drive.Data.Entities.Models;
 using Drive.Domain.Repositories;
 using Drive.Presentation.Abstractions;
+using Drive.Presentation.Actions.UserRegister;
 using Drive.Presentation.Helpers;
 using File = Drive.Data.Entities.Models.File;
 
@@ -31,11 +32,14 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         public void Open()
         {
             Console.Clear();
-            var sharedFolders = _userRepository.GetFoldersOrFilesSharedWithUser<Folder>(_user);
-            var sharedFiles = _userRepository.GetFoldersOrFilesSharedWithUser<File>(_user);
+            var sharedFolders = _shareRepository.GetSharedFoldersWithUser(_user);
+            var sharedFiles = _shareRepository.GetSharedFilesWithUser(_user);
             if (!sharedFolders.Any() && !sharedFiles.Any())
             {
                 Console.WriteLine("You don't have items shared with you.");
+                Console.ReadKey();
+                var myDiskMenu = new LogInAction(_userRepository, _folderRepository, _fileRepository,_shareRepository, _commentRepository);
+                myDiskMenu.OpenDiskMenu(_user);
                 return;
             }
             Console.WriteLine("Items shared with you: ");
@@ -44,7 +48,9 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             
             foreach (var file in sharedFiles)            
                 Writer.DisplaySharedFile(file);
-            
+
+            var commandPromptEdit = new CommandAction(_userRepository, _folderRepository, _fileRepository, _shareRepository, _commentRepository);
+            commandPromptEdit.CommandPromptForEditShare(_user, sharedFolders, sharedFiles);           
 
 
         }

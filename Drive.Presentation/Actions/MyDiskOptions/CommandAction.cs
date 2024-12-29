@@ -9,6 +9,7 @@ using Drive.Presentation.Actions.UserRegister;
 using Drive.Presentation.Utils;
 using Drive.Domain.Factories;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace Drive.Presentation.Actions.MyDiskOptions
 {
@@ -158,21 +159,22 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         }
         private void EnterFolder(string name, User user)
         {
-            if (!_folderRepository.IsFolderExists(name, user))
+            if (name == "Root")
             {
-                Console.WriteLine("Entered name of folder doesn't exisits.");
+                CurrentFolder = _folderRepository.GetRootFolder("Root", user);
+                Console.WriteLine($"You entered the root folder: {CurrentFolder?.Name}");
                 return;
             }
-            if (name == "Root")
-                CurrentFolder = _folderRepository.GetRootFolder("Root", user);
-            else
-            {
 
-                var enteredFolder = _folderRepository.GetFolderByNameAndParentFolder(name, user, CurrentFolder.Id);
-                CurrentFolder = enteredFolder;
+            var enteredFolder = _folderRepository.GetFolderByNameAndParentFolder(name, user, CurrentFolder?.Id ?? 0);            
+            if (enteredFolder == null)
+            {
+                Console.WriteLine($"Folder '{name}' does not exist in the current context (Parent Folder: '{CurrentFolder?.Name ?? "None"}').");
+                return;
             }
 
-            Console.WriteLine($"You entered folder - {CurrentFolder?.Name}");
+            CurrentFolder = enteredFolder;
+            Console.WriteLine($"You entered the folder: {CurrentFolder.Name}");
         }
         public void DeleteItem(string currentName, User user)
         {
@@ -239,8 +241,11 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 Console.WriteLine("Entered name of File doesn't exist.");
                 return;
             }
-
-            Console.WriteLine($"Editing file - {name}: \nType :help for a list of commands.\n");
+            EditFileProcess(file);
+        }
+        private void EditFileProcess(File file)
+        {
+            Console.WriteLine($"Editing file - {file.Name}: \nType :help for a list of commands.\n");
             Console.WriteLine($"Current Content:\n{file.Content}\n");
 
             List<string> lines = new List<string>(file.Content?.Split(Environment.NewLine) ?? Array.Empty<string>());
@@ -299,7 +304,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             switch (command.ToLower())
             {
                 case "help":
-                    HelpMenu.DisplayEditCommands();
+                    HelpMenu.DisplayEditFileCommands();
                     return false;
                 case "save and exit":
                     Console.WriteLine("\nSaving changes...");
@@ -507,6 +512,131 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             }
             var response = _shareRepository.Delete(share);
             Console.WriteLine($"File: {file.Name} it no longer shared with {sharedWithUser.Name}.");
+        }        
+
+        public void CommandPromptForEditShare(User user, IEnumerable<Folder> sharedFolders, IEnumerable<File> sharedFiles)
+        {          
+            while (true)
+            {
+                Console.Write("\nEnter a command (help - for list of commands): ");
+                string input = Console.ReadLine()?.Trim() ?? "";
+                string[] parts = !string.IsNullOrEmpty(input) ? input.Split(" ") : Array.Empty<string>();
+                if (parts.Length < 1)
+                {
+                    Console.WriteLine("Invalid input, try again");
+                    continue;
+                }
+
+                var name = string.Join(" ", parts.Skip(1));
+                switch (parts[0])
+                {
+                    case "help":
+                        HelpMenu.DisplayEditSharedItemsCommands();
+                        break;                                          
+                    case "enter.folder":
+                        EnterSharedFolder(name, user, sharedFolders);
+                        break;
+                    case "edit.file":
+                        EditSharedFile(name, user, sharedFiles);
+                        break;
+                    case "delete.f":
+                        DeleteSharedItem(name, user, sharedFolders, sharedFiles);
+                        break;                                         
+                    case "back":
+                        var logInMenu = new LogInAction(_userRepository, _folderRepository, _fileRepository, _shareRepository, _commentRepository);
+                        logInMenu.OpenDiskMenu(user);
+                        break;
+                    default:
+                        Console.WriteLine("Invalid input, try again.");
+                        Console.ReadKey();
+                        continue;
+                }
+            }
+        }
+        private void RefreshCommandPromptForEditShare(User user)
+        {
+            var refreshFiles = new SharedWithMe(RepositoryFactory.Create<UserRepositroy>(), RepositoryFactory.Create<FolderRepository>(), RepositoryFactory.Create<FileRepository>(), RepositoryFactory.Create<ShareRepository>(), RepositoryFactory.Create<CommentRepository>(), user);
+            refreshFiles.Open();
+        }
+        private void EnterSharedFolder(string name, User user, IEnumerable<Folder> sharedFolders)
+        {
+            
+            var sharedFolder = sharedFolders.FirstOrDefault(s => s.Name == name);
+            if (sharedFolder == null)
+            {
+                Console.WriteLine("The entered folder does not exist in your shared items.");
+                return;
+            }
+
+            CurrentFolder = sharedFolder;
+            Console.WriteLine($"You entered shared folder - {CurrentFolder?.Name}");
+        }
+        private void EditSharedFile(string name, User user, IEnumerable<File> sharedFiles)
+        {            
+            var file = _shareRepository.GetSharedFileByNameAndParentFolder(sharedFiles, name, CurrentFolder?.Id ?? 0);
+            if (file is null)
+            {
+                Console.WriteLine("Entered name of File doesn't exist.");
+                return;
+            }
+            EditFileProcess(file);
+        }
+        private void DeleteSharedItem(string name, User user, IEnumerable<Folder> sharedFolders, IEnumerable<File> sharedFiles)
+        {
+            var folderToDelete = _shareRepository.GetSharedFolderByNameAndParentFolder(sharedFolders, name, CurrentFolder?.Id ?? 0);
+            if (folderToDelete != null)
+            {
+                DeleteSharedFolder(folderToDelete, user);
+                return;
+            }
+
+            var fileToDelete = _shareRepository.GetSharedFileByNameAndParentFolder(sharedFiles, name, CurrentFolder?.Id ?? 0);
+            if (fileToDelete != null)
+            {
+                DeleteSharedFile(fileToDelete, user);
+                return;
+            }
+
+            Console.WriteLine("The item with the specified name does not exist.");
+        }
+        private void DeleteSharedFolder(Folder folder, User user)
+        {
+            if (!Confirmation.ConfirmationDialog("delete file"))
+            {
+                Console.WriteLine("Canceled delete action!");
+                return;
+            }
+            var responseResult = _shareRepository.DeleteFolderFromShareWith(folder, user);
+
+            if (responseResult == ResponseResultType.Success)
+            {
+                Console.WriteLine("Successfully deleted folder from Shared With Me.");
+                Console.ReadKey();
+                RefreshCommandPromptForEditShare(user);
+            }
+            else
+                Console.WriteLine(ResponseHandler.ErrorMessage(responseResult));
+        }
+        private void DeleteSharedFile(File file, User user)
+        {
+            if (!Confirmation.ConfirmationDialog("delete file"))
+            {
+                Console.WriteLine("Canceled delete action!");
+                return;
+            }
+            var responseResult = _shareRepository.DeleteFileFromShareWith(file, user);
+
+            if (responseResult == ResponseResultType.Success)
+            {
+                Console.WriteLine("Successfully deleted file from Shared With Me.");
+                Console.ReadKey();
+                RefreshCommandPromptForEditShare(user);
+            }
+            else
+                Console.WriteLine(ResponseHandler.ErrorMessage(responseResult));
+
+            
+
         }
     }    
 }
