@@ -12,15 +12,18 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         private readonly UserRepositroy _userRepository;
         private readonly FolderRepository _folderRepository;
         private readonly FileRepository _fileRepository;
-
+        private readonly ShareRepository _shareRepository;
+        private readonly CommentRepository _commentRepository;
 
         private User _user {  get; set; }
-        public MyDisk(UserRepositroy userRepositroy, FolderRepository folderRepository,FileRepository fileRepository, User user)
+        public MyDisk(UserRepositroy userRepositroy, FolderRepository folderRepository,FileRepository fileRepository, ShareRepository shareRepository, CommentRepository commentRepository, User user)
         {
             _userRepository = userRepositroy;
             _folderRepository = folderRepository;
             _fileRepository = fileRepository;
             _user = user;
+            _shareRepository = shareRepository;
+            _commentRepository = commentRepository;
         }
         public string Name { get; set; } = "My Disk";
         public int MenuIndex { get; set; }
@@ -49,7 +52,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 Console.ReadKey();
                 return;
             }
-            var commandAction = new CommandAction(_userRepository, _folderRepository, _fileRepository);
+            var commandAction = new CommandAction(_userRepository, _folderRepository, _fileRepository, _shareRepository, _commentRepository);
             commandAction.CommandPrompt(_user, rootFolder);
         }
     }

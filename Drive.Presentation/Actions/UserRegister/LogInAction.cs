@@ -15,11 +15,15 @@ namespace Drive.Presentation.Actions.UserRegister
         private readonly UserRepositroy _userRepository;
         private readonly FolderRepository _folderRepository;
         private readonly FileRepository _fileRepository;
-        public LogInAction(UserRepositroy userRepositroy, FolderRepository folderRepository, FileRepository fileRepository)
+        private readonly ShareRepository _shareRepository;
+        private readonly CommentRepository _commentRepository;
+        public LogInAction(UserRepositroy userRepositroy, FolderRepository folderRepository, FileRepository fileRepository, ShareRepository shareRepository, CommentRepository commentRepository)
         {
             _userRepository = userRepositroy;
             _folderRepository = folderRepository;
             _fileRepository = fileRepository;
+            _shareRepository = shareRepository;
+            _commentRepository = commentRepository;
         }
 
         public string Name { get; set; } = "Log in";
@@ -60,9 +64,9 @@ namespace Drive.Presentation.Actions.UserRegister
         public void OpenDiskMenu(User user)
         {
             var actions = new List<IAction> {
-                new MyDisk(_userRepository, _folderRepository,_fileRepository, user),
-                new SharedWithMe(_userRepository, _folderRepository,_fileRepository, user),
-                new ProfileSettings(_userRepository, _folderRepository,_fileRepository, user),
+                new MyDisk(_userRepository, _folderRepository,_fileRepository,_shareRepository,_commentRepository, user),
+                new SharedWithMe(_userRepository, _folderRepository,_fileRepository,_shareRepository,_commentRepository, user),
+                new ProfileSettings(_userRepository, _folderRepository,_fileRepository,_shareRepository,_commentRepository, user),
                 new LogOut()
              };
             var diskMenu = new DiskMenu(actions);

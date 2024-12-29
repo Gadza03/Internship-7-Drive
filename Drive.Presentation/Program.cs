@@ -16,7 +16,7 @@ class Program
     {
         var actions = new List<IAction> {
             new RegisterAction(RepositoryFactory.Create<UserRepositroy>(),RepositoryFactory.Create<FolderRepository>(),RepositoryFactory.Create<FileRepository>()),
-            new LogInAction(RepositoryFactory.Create<UserRepositroy>(),RepositoryFactory.Create<FolderRepository>(),RepositoryFactory.Create<FileRepository>()),
+            new LogInAction(RepositoryFactory.Create<UserRepositroy>(),RepositoryFactory.Create<FolderRepository>(),RepositoryFactory.Create<FileRepository>(),RepositoryFactory.Create<ShareRepository>(),RepositoryFactory.Create<CommentRepository>()),
             new ExitAction()
         };
         var mainMenu = new MainMenu(actions);

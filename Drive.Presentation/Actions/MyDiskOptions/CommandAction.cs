@@ -8,6 +8,7 @@ using Drive.Presentation.Actions.MenuOptions.SubMenus;
 using Drive.Presentation.Actions.UserRegister;
 using Drive.Presentation.Utils;
 using Drive.Domain.Factories;
+using System.ComponentModel.DataAnnotations;
 
 namespace Drive.Presentation.Actions.MyDiskOptions
 {
@@ -16,13 +17,18 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         private readonly UserRepositroy _userRepository;
         private readonly FolderRepository _folderRepository;
         private readonly FileRepository _fileRepository;
-        private Folder CurrentFolder {  get;  set; }
-        public CommandAction(UserRepositroy userRepositroy, FolderRepository folderRepository, FileRepository fileRepository)
+        private readonly ShareRepository _shareRepository;
+        private readonly CommentRepository _commentRepository;
+
+        private Folder CurrentFolder { get; set; }
+        public CommandAction(UserRepositroy userRepositroy, FolderRepository folderRepository, FileRepository fileRepository, ShareRepository shareRepository, CommentRepository commentRepository)
         {
             _userRepository = userRepositroy;
             _folderRepository = folderRepository;
             _fileRepository = fileRepository;
             CurrentFolder = new Folder();
+            _shareRepository = shareRepository;
+            _commentRepository = commentRepository;
         }
 
         public void CommandPrompt(User user, Folder parentFolder)
@@ -35,7 +41,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 string[] parts = !string.IsNullOrEmpty(input) ? input.Split(" ") : Array.Empty<string>();
                 if (parts.Length < 1)
                 {
-                    Console.WriteLine("Invalid input, try again");                    
+                    Console.WriteLine("Invalid input, try again");
                     continue;
                 }
 
@@ -44,9 +50,9 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 {
                     case "help":
                         HelpMenu.DisplayCommands();
-                        break;                    
+                        break;
                     case "create.folder":
-                        CreateItem(ItemType.Folder,name, user, CurrentFolder.Id);
+                        CreateItem(ItemType.Folder, name, user, CurrentFolder.Id);
                         break;
                     case "create.file":
                         CreateItem(ItemType.File, name, user, CurrentFolder.Id);
@@ -61,10 +67,30 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                         DeleteItem(name, user);
                         break;
                     case "rename.f":
-                        RenameItem(name,user);
+                        RenameItem(name, user);
+                        break;
+                    case "share.f":
+                        if (parts.Length < 3)
+                        {
+                            Console.WriteLine("Invalid command. Usage: stop.f <email> <item name>");
+                            break;
+                        }
+                        var email = parts[1];
+                        var nameOfItem = string.Join(" ", parts.Skip(2));
+                        ShareItem(email, nameOfItem, user);
+                        break;
+                    case "stop.sharing.f":
+                        if (parts.Length < 3)
+                        {
+                            Console.WriteLine("Invalid command. Usage: stop.sharing.f <email> <item name>");
+                            break;
+                        }
+                        email = parts[1];
+                        nameOfItem = string.Join(" ", parts.Skip(2));
+                        StopSharingItem(email, nameOfItem, user);
                         break;
                     case "back":
-                        var logInMenu = new LogInAction(_userRepository, _folderRepository, _fileRepository);
+                        var logInMenu = new LogInAction(_userRepository, _folderRepository, _fileRepository, _shareRepository, _commentRepository);
                         logInMenu.OpenDiskMenu(user);
                         break;
                     default:
@@ -72,13 +98,13 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                         Console.ReadKey();
                         continue;
                 }
-                
-                
+
+
             }
         }
         private void RefreshCommandPrompt(User user)
         {
-            var refreshFiles = new MyDisk(RepositoryFactory.Create<UserRepositroy>(), RepositoryFactory.Create<FolderRepository>(), RepositoryFactory.Create<FileRepository>(), user);
+            var refreshFiles = new MyDisk(RepositoryFactory.Create<UserRepositroy>(), RepositoryFactory.Create<FolderRepository>(), RepositoryFactory.Create<FileRepository>(), RepositoryFactory.Create<ShareRepository>(), RepositoryFactory.Create<CommentRepository>(), user);
             refreshFiles.Open();
         }
         private void CreateItem(ItemType type, string name, User user, int parentFolderId)
@@ -98,7 +124,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 responseResult = _folderRepository.ValidateItemName(ItemType.File, name, user.Id, parentFolderId, _fileRepository);
                 if (responseResult == ResponseResultType.Success)
                 {
-                    CreateFile(name,user, parentFolderId);
+                    CreateFile(name, user, parentFolderId);
                     return;
                 }
             }
@@ -134,10 +160,10 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         {
             if (!_folderRepository.IsFolderExists(name, user))
             {
-                Console.WriteLine("Entered name of folder doesn't exisits.");              
+                Console.WriteLine("Entered name of folder doesn't exisits.");
                 return;
             }
-            if (name == "Root")            
+            if (name == "Root")
                 CurrentFolder = _folderRepository.GetRootFolder("Root", user);
             else
             {
@@ -145,9 +171,9 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 var enteredFolder = _folderRepository.GetFolderByNameAndParentFolder(name, user, CurrentFolder.Id);
                 CurrentFolder = enteredFolder;
             }
-            
+
             Console.WriteLine($"You entered folder - {CurrentFolder?.Name}");
-        }        
+        }
         public void DeleteItem(string currentName, User user)
         {
             var file = _fileRepository.GetFileByNameAndFolder(currentName, user, CurrentFolder.Id);
@@ -169,13 +195,13 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 DeleteFolder(folder, user);
                 return;
             }
-            
+
             Console.WriteLine("The item with the specified name does not exist.");
-                
+
         }
         private void DeleteFolder(Folder folder, User user)
         {
-            
+
             if (!Confirmation.ConfirmationDialog("delete folder"))
             {
                 Console.WriteLine("Canceled delete action.");
@@ -188,7 +214,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 Console.ReadKey();
                 RefreshCommandPrompt(user);
             }
-               
+
         }
         private void DeleteFile(File file, User user)
         {
@@ -268,7 +294,6 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             }
             Console.WriteLine(isSaved ? "File saved successfully." : "Changes were not saved.");
         }
-
         private bool HandleCommand(string command, ref List<string> lines, File file, ref bool isSaved)
         {
             switch (command.ToLower())
@@ -291,8 +316,6 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                     return false;
             }
         }
-
-
         public void RenameItem(string currentName, User user)
         {
             if (currentName == "Root")
@@ -305,19 +328,19 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             {
                 RenameFolder(folder, user);
                 return;
-            }            
+            }
             var file = _fileRepository.GetFileByNameAndFolder(currentName, user, CurrentFolder.Id);
             if (file != null)
             {
-                RenameFile(file,user);
+                RenameFile(file, user);
                 return;
             }
-          
+
             Console.WriteLine("The item with the specified name does not exist.");
         }
         private void RenameFolder(Folder folder, User user)
-        {            
-            Console.Write($"Selected folder: {folder.Name}\nEnter new name: ");            
+        {
+            Console.Write($"Selected folder: {folder.Name}\nEnter new name: ");
             var newName = Console.ReadLine()?.Trim() ?? string.Empty;
 
             var responseResult = _folderRepository.ValidateItemName(ItemType.Folder, newName, folder.OwnerId, folder.ParentFolderId, _fileRepository);
@@ -362,7 +385,128 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             Console.ReadKey();
             RefreshCommandPrompt(user);
         }
-  
+        private void ShareItem(string email, string nameOfItem, User userSharedBy)
+        {
+            var userForShare = _userRepository.GetUserByMail(email);
+            if (userForShare == null)
+            {
+                Console.WriteLine($"User with email: {email} doesn't exists.");
+                return;
+            }
+            if (nameOfItem == "Root")
+            {
+                Console.WriteLine("You can't Share Root folder.");
+                return;
+            }
+            var folder = _folderRepository.GetFolderByNameAndParentFolder(nameOfItem, userSharedBy, CurrentFolder.Id);
+            if (folder != null)
+            {
+                ShareFolder(folder, userSharedBy, userForShare);
+                return;
+            }
+            var file = _fileRepository.GetFileByNameAndFolder(nameOfItem, userSharedBy, CurrentFolder.Id);
+            if (file != null)
+            {
+                ShareFile(file, userSharedBy, userForShare);
+                return;
+            }
 
-    }
+            Console.WriteLine("The item with the specified name does not exist.");
+        }
+        private void ShareFolder(Folder folder, User sharedByUser, User sharedWithUser)
+        {
+
+            var share = new Share
+            {
+                ItemId = folder.Id,
+                ItemType = ItemType.Folder,
+                SharedById = sharedByUser.Id,
+                SharedWithId = sharedWithUser.Id
+            };
+            var response = _shareRepository.Add(share);
+
+            var filesInFolder = _fileRepository.GetFileByFolderAndOwner(folder, sharedByUser);
+            foreach (var file in filesInFolder)
+            {
+                ShareFile(file, sharedByUser, sharedWithUser);
+            }
+
+            var subFolders = _folderRepository.GetFileByParentFolderAndOwner(folder, sharedByUser);
+            foreach (var subFolder in subFolders)
+            {
+                ShareFolder(subFolder, sharedByUser, sharedWithUser);
+            }
+
+            Console.WriteLine($"Folder {folder.Name} and its contents successfully shared.");
+        }
+        private void ShareFile(File file, User sharedByUser, User sharedWithUser)
+        {
+            var share = new Share
+            {
+                ItemId = file.Id,
+                ItemType = ItemType.File,
+                SharedById = sharedByUser.Id,
+                SharedWithId = sharedWithUser.Id
+            };
+            var response = _shareRepository.Add(share);
+            Console.WriteLine($"File {file.Name} successfully shared.");
+        }
+        private void StopSharingItem(string email, string nameOfItem, User userSharedBy)
+        {
+            var sharedToUser = _userRepository.GetUserByMail(email);
+            if (sharedToUser == null)
+            {
+                Console.WriteLine($"User with email: {email} doesn't exists.");
+                return;
+            }
+            var folder = _folderRepository.GetFolderByNameAndParentFolder(nameOfItem, userSharedBy, CurrentFolder.Id);
+            if (folder != null)
+            {
+                StopSharingFolder(folder, userSharedBy, sharedToUser);
+                return;
+            }
+            var file = _fileRepository.GetFileByNameAndFolder(nameOfItem, userSharedBy, CurrentFolder.Id);
+            if (file != null)
+            {
+                StopSharingFile(file, userSharedBy, sharedToUser);
+                return;
+            }
+            Console.WriteLine("The item with the specified name does not exist or is not shared with the specified user.");
+
+        }
+        private void StopSharingFolder(Folder folder, User sharedByUser, User sharedWithUser)
+        {
+            var share = _shareRepository.GetShare(sharedByUser, sharedWithUser, folder.Id);
+            if (share == null)
+            {
+                Console.WriteLine($"Folder with ID: {folder.Id} is not shared with user {sharedWithUser.Name}.");
+                return;
+            }
+            var response = _shareRepository.Delete(share);
+            Console.WriteLine($"Folder: {folder.Name} it no longer shared with {sharedWithUser.Name}.");
+            var filesInFolder = _fileRepository.GetFileByFolderAndOwner(folder, sharedByUser);
+            foreach ( var file in filesInFolder)
+            {
+                StopSharingFile(file, sharedByUser, sharedWithUser);
+            }
+
+            var subFolders = _folderRepository.GetFileByParentFolderAndOwner(folder, sharedByUser);
+            foreach (var subFolder in subFolders)
+            {
+                StopSharingFolder(subFolder, sharedByUser, sharedWithUser);
+            }
+        }
+        private void StopSharingFile(File file, User sharedByUser, User sharedWithUser)
+        {
+
+            var share = _shareRepository.GetShare(sharedByUser, sharedWithUser, file.Id);
+            if (share == null)
+            {
+                Console.WriteLine($"File with ID: {file.Id} is not shared with user {sharedWithUser.Name}.");
+                return;
+            }
+            var response = _shareRepository.Delete(share);
+            Console.WriteLine($"File: {file.Name} it no longer shared with {sharedWithUser.Name}.");
+        }
+    }    
 }

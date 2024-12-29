@@ -78,7 +78,10 @@ namespace Drive.Domain.Repositories
         {
             return DbContext.Folders.Any(f => f.Name == name && f.OwnerId == user.Id);
         }
-       
+        public List<Folder> GetFileByParentFolderAndOwner(Folder parentFolder, User owner)
+        {
+            return DbContext.Folders.Where(f => f.ParentFolderId == parentFolder.Id && f.OwnerId == owner.Id).ToList();
+        }
         public Folder? GetFolderByNameAndParentFolder(string name, User user, int parentFolderId)
         {
             return DbContext.Folders.FirstOrDefault(f => f.Name == name && f.OwnerId == user.Id && f.ParentFolderId == parentFolderId);

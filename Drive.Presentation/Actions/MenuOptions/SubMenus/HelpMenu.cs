@@ -12,8 +12,10 @@ namespace Drive.Presentation.Actions.MenuOptions.SubMenus
                      "create.file ‘file name’ – Creates a file in the current location.\n" +
                      "enter.folder ‘folder name’ – Navigates into the specified folder.\n" +
                      "edit.file ‘file name’ – Edits the specified file.\n" +
-                     "delete.folder/file ‘folder or file name’ – Deletes the specified folder or file.\n" +
-                     "rename.folder/file ‘folder or file name’ to ‘new name’ – Renames the specified folder or file.\n" +
+                     "delete.f ‘folder or file name’ – Deletes the specified folder or file.\n" +
+                     "rename.f ‘folder or file name’ to ‘new name’ – Renames the specified folder or file.\n" +
+                     "share.f 'mail' ‘folder or file name’ to share item with other users.\n" +
+                     "stop.sharing.f 'mail' ‘folder or file name’ to stop sharing item with other users.\n" + 
                      "back – Returns to the previous folder.\n");
         }
 
@@ -21,7 +23,7 @@ namespace Drive.Presentation.Actions.MenuOptions.SubMenus
         {
             Console.WriteLine("\nFile Editor Commands:\n" +
                         ":help - Display all commands\n" +
-                        ":save - Save changes and exit\n" +
+                        ":save and exit - Save changes and exit\n" +
                         ":exit - Exit without saving\n");
         }
     }

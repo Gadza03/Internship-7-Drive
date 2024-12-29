@@ -41,7 +41,10 @@ namespace Drive.Domain.Repositories
             };
             Add(newFile);
         }
-      
+        public List<File> GetFileByFolderAndOwner(Folder folder, User owner)
+        {
+            return DbContext.Files.Where(f => f.FolderId == folder.Id && f.OwnerId == owner.Id).ToList();
+        }
         public File? GetFileByNameAndFolder(string name, User user, int folderId)
         {
             return DbContext.Files.FirstOrDefault(f => f.Name == name && f.OwnerId == user.Id && f.FolderId == folderId);

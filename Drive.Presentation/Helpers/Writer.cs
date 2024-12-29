@@ -18,5 +18,19 @@ namespace Drive.Presentation.Helpers
         {
             Console.WriteLine($"File: {file.Name}, Last Modified: {file.LastModifiedAt}, (Parent Folder: {file.Folder?.Name})");
         }
+
+        public static void DisplaySharedFolder(Folder folder)
+        {
+            if (folder.ParentFolder != null)
+                Console.WriteLine($"Folder: {folder.Name}, Parent Folder: {folder.ParentFolder.Name} "+
+                 $" -- Owner: Id: {folder.OwnerId} Name: {folder.Owner?.Name} {folder.Owner?.Surname}");
+            else
+                Console.WriteLine($"Folder: {folder.Name} -- Owner: Id: {folder.OwnerId} Name: {folder.Owner?.Name} {folder.Owner?.Surname}");
+        }
+        public static void DisplaySharedFile(File file)
+        {
+            Console.WriteLine($"File: {file.Name}, Last Modified: {file.LastModifiedAt}, (Parent Folder: {file.Folder?.Name})" +
+                $" -- Owner: Id: {file.OwnerId} Name: {file.Owner?.Name} {file.Owner?.Surname}");
+        }
     }
 }
