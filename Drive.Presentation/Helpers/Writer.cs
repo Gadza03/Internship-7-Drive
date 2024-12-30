@@ -32,5 +32,10 @@ namespace Drive.Presentation.Helpers
             Console.WriteLine($"File: {file.Name}, Last Modified: {file.LastModifiedAt}, (Parent Folder: {file.Folder?.Name})" +
                 $" -- Owner: Id: {file.OwnerId} Name: {file.Owner?.Name} {file.Owner?.Surname}");
         }
+        public static void DisplayComments(Comment comment)
+        {
+            Console.WriteLine($"Id: {comment.AuthorId} - {comment.Author?.Email} - {comment.LastModified}\n" +
+                $"Content:\n{comment.Content}\n");
+        }
     }
 }

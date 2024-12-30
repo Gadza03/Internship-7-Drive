@@ -10,6 +10,7 @@ using Drive.Presentation.Utils;
 using Drive.Domain.Factories;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using Drive.Presentation.Helpers;
 
 namespace Drive.Presentation.Actions.MyDiskOptions
 {
@@ -241,9 +242,9 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 Console.WriteLine("Entered name of File doesn't exist.");
                 return;
             }
-            EditFileProcess(file);
+            EditFileProcess(file, user);
         }
-        private void EditFileProcess(File file)
+        private void EditFileProcess(File file, User user)
         {
             Console.WriteLine($"Editing file - {file.Name}: \nType :help for a list of commands.\n");
             Console.WriteLine($"Current Content:\n{file.Content}\n");
@@ -261,6 +262,11 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                     if (currentLine.StartsWith(":"))
                     {
                         string command = currentLine.Substring(1).Trim();
+                        if (command == "open comments")
+                        {
+                            CommandPromptForComments(file, user);
+                            break;
+                        }
                         if (HandleCommand(command, ref lines, file, ref isSaved))
                         {
                             break;
@@ -315,7 +321,8 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                     return true;
                 case "exit":
                     Console.WriteLine("\nExiting without saving...");
-                    return true;
+                    return true;               
+
                 default:
                     Console.WriteLine("\nUnknown command. Type :help for a list of commands.");
                     return false;
@@ -541,7 +548,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                         break;
                     case "delete.f":
                         DeleteSharedItem(name, user, sharedFolders, sharedFiles);
-                        break;                                         
+                        break;                    
                     case "back":
                         var logInMenu = new LogInAction(_userRepository, _folderRepository, _fileRepository, _shareRepository, _commentRepository);
                         logInMenu.OpenDiskMenu(user);
@@ -579,7 +586,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 Console.WriteLine("Entered name of File doesn't exist.");
                 return;
             }
-            EditFileProcess(file);
+            EditFileProcess(file, user);
         }
         private void DeleteSharedItem(string name, User user, IEnumerable<Folder> sharedFolders, IEnumerable<File> sharedFiles)
         {
@@ -633,10 +640,95 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 RefreshCommandPromptForEditShare(user);
             }
             else
-                Console.WriteLine(ResponseHandler.ErrorMessage(responseResult));
+                Console.WriteLine(ResponseHandler.ErrorMessage(responseResult));           
 
-            
+        }
 
+        public void CommandPromptForComments(File file, User user)
+        {
+            Console.Clear();
+            var allComments = _commentRepository.GetAllComments(file);
+            if (!allComments.Any())
+            {
+                Console.WriteLine("This file doesn't have any comments.");
+                Console.ReadKey();
+                return;
+            }
+            foreach (var comment in allComments)            
+                Writer.DisplayComments(comment);
+
+            while (true)
+            {
+                Console.Write("\nEnter a command for comments (help - for list of commands): ");
+                string input = Console.ReadLine()?.Trim() ?? "";
+                string[] parts = !string.IsNullOrEmpty(input) ? input.Split(" ") : Array.Empty<string>();
+                if (parts.Length < 1)
+                {
+                    Console.WriteLine("Invalid input, try again");
+                    continue;
+                }
+                var commentId = string.Join(" ", parts.Skip(1));
+                var parsedId = _commentRepository.ValidId(commentId);
+               
+                
+                switch (parts[0])
+                {
+                    case "help":
+                        HelpMenu.DisplayCommentCommands();
+                        break;
+                    case "add.c":
+                        AddComment(file, user);
+                        break;
+                    case "edit.c":
+                        if (parsedId is null)
+                        {
+                            Console.WriteLine("Invalid format of id, have to be number.");
+                            break;
+                        }
+                        //EditComment(file,commentId);
+                        break;
+                    case "delete.c":
+                        if (parsedId is null)
+                        {
+                            Console.WriteLine("Invalid format of id, have to be number.");
+                            break;
+                        }
+                        //DeleteComment(file,commentId);
+                        break;
+                    default:
+                        Console.WriteLine("Invalid input, try again (help - for a list of commands).");
+                        Console.ReadKey();
+                        continue;
+                }
+            }
+        }
+
+        private void AddComment(File file,  User author)
+        {
+            //var comment = _commentRepository.GetCommentById(file,commentId);
+            //if (comment is null)
+            //{
+            //    Console.WriteLine($"Comment ID: {commentId} doesn't exist in this file.");
+            //    return;
+            //}
+            string? newCommentContent;
+            while (true)
+            {
+                Console.WriteLine("Enter a new comment: ");
+                newCommentContent = Console.ReadLine();
+                if (!string.IsNullOrEmpty(newCommentContent))
+                    break;
+                Console.WriteLine("Invalid input, new content cannot be empty.");
+            }
+            var newCommnet = new Comment
+            {
+                Content = newCommentContent,
+                FileId = file.Id,
+                AuthorId = author.Id,
+                CreatedAt = DateTime.UtcNow,
+                LastModified = DateTime.UtcNow
+            };
+            var responseResult = _commentRepository.Add(newCommnet);
         }
     }    
 }
