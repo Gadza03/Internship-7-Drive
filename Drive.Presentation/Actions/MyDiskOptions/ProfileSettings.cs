@@ -31,16 +31,18 @@ namespace Drive.Presentation.Actions.MyDiskOptions
 
         public void Open()
         {
-            Console.WriteLine("Samo da nije password HAHHAH! Disk opcija 3.");
-            Console.ReadKey();
+            OpenProfileSettingsMenu();
         }
         private void OpenProfileSettingsMenu()
         {
-            var profileMenu = new ProfileSettingsMenu
-            {
+            var actions = new List<IAction>{
                 new ChangePassword(_userRepository, _folderRepository, _fileRepository, _shareRepository, _commentRepository, _user),
                 new ChangeEmail(_userRepository, _folderRepository, _fileRepository, _shareRepository, _commentRepository, _user),
             };
+            var profileMenu = new ProfileSettingsMenu(actions);
+            profileMenu.Open();
+
+          
         }
     }
 }

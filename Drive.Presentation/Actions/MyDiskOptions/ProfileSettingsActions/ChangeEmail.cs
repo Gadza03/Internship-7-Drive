@@ -5,7 +5,7 @@ using Drive.Presentation.Abstractions;
 
 namespace Drive.Presentation.Actions.MyDiskOptions.ProfileSettingsActions
 {
-    internal class ChangeEmail : IAction
+    public class ChangeEmail : IAction
     {
         private readonly UserRepositroy _userRepository;
         private readonly FolderRepository _folderRepository;
