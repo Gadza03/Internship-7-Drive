@@ -246,6 +246,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         }
         private void EditFileProcess(File file, User user)
         {
+            Console.Clear();
             Console.WriteLine($"Editing file - {file.Name}: \nType :help for a list of commands.\n");
             Console.WriteLine($"Current Content:\n{file.Content}\n");
 
@@ -304,6 +305,16 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 }
             }
             Console.WriteLine(isSaved ? "File saved successfully." : "Changes were not saved.");
+            if (user.Id == file.OwnerId)
+            {
+                RefreshCommandPrompt(user);
+            }
+            else
+            {
+                RefreshCommandPromptForEditShare(user);
+            }
+
+            
         }
         private bool HandleCommand(string command, ref List<string> lines, File file, ref bool isSaved)
         {
@@ -650,12 +661,14 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             var allComments = _commentRepository.GetAllComments(file);
             if (!allComments.Any())
             {
-                Console.WriteLine("This file doesn't have any comments.");
-                Console.ReadKey();
-                return;
+                Console.WriteLine("This file doesn't have any comments.");                
             }
-            foreach (var comment in allComments)            
-                Writer.DisplayComments(comment);
+            else
+            {
+                foreach (var comment in allComments)
+                    Writer.DisplayComments(comment);
+            }
+            
 
             while (true)
             {
@@ -685,7 +698,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                             Console.WriteLine("Invalid format of id, have to be number.");
                             break;
                         }
-                        //EditComment(file,commentId);
+                        EditComment(file,user,parsedId);
                         break;
                     case "delete.c":
                         if (parsedId is null)
@@ -693,7 +706,10 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                             Console.WriteLine("Invalid format of id, have to be number.");
                             break;
                         }
-                        //DeleteComment(file,commentId);
+                        DeleteComment(file,user,parsedId);
+                        break;
+                    case "back":
+                        EditFileProcess(file, user);
                         break;
                     default:
                         Console.WriteLine("Invalid input, try again (help - for a list of commands).");
@@ -704,13 +720,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         }
 
         private void AddComment(File file,  User author)
-        {
-            //var comment = _commentRepository.GetCommentById(file,commentId);
-            //if (comment is null)
-            //{
-            //    Console.WriteLine($"Comment ID: {commentId} doesn't exist in this file.");
-            //    return;
-            //}
+        {            
             string? newCommentContent;
             while (true)
             {
@@ -727,8 +737,80 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 AuthorId = author.Id,
                 CreatedAt = DateTime.UtcNow,
                 LastModified = DateTime.UtcNow
-            };
+            };            
             var responseResult = _commentRepository.Add(newCommnet);
+            if (responseResult == ResponseResultType.Success)
+            {
+                file.LastModifiedAt = DateTime.UtcNow;
+                _fileRepository.Update(file);
+                Console.WriteLine($"Succesfully added comment in '{file.Name}' file.");
+                Console.ReadKey();
+            }
+            EditFileProcess(file, author);
         }
+        private void DeleteComment(File file, User user, int? commentId)
+        {
+            var commentWithId = _commentRepository.GetCommentById(file, commentId);
+            if (commentWithId is null)
+            {
+                Console.WriteLine($"Comment with id - {commentId} doesn't exists for this file.");
+                return;
+            }
+            var responseResult = _commentRepository.Delete(commentWithId);
+
+            if (responseResult == ResponseResultType.Success)
+            {
+                file.LastModifiedAt = DateTime.UtcNow;
+                _fileRepository.Update(file);
+                Console.WriteLine($"Succesfully deleted comment in '{file.Name}' file.");
+                Console.ReadKey();
+            }          
+
+            EditFileProcess(file, user);
+        }
+        //treba ga upgradeati
+        private void EditComment(File file, User user, int? commentId)
+        {
+            
+            var comment = _commentRepository.GetCommentById(file, commentId);
+            if (comment is null)
+            {
+                Console.WriteLine($"Comment with id - {commentId} doesn't exist for this file.");
+                return;
+            }
+
+            Console.WriteLine($"Current comment content: {comment.Content}");
+            Console.Write("Edit the comment (the current content is preloaded): ");
+
+            string newContent = Console.ReadLine()?.Trim() ?? comment.Content;
+
+
+            if (string.IsNullOrEmpty(newContent))
+            {
+                Console.WriteLine("Comment cannot be empty. Keeping the original content.");
+                Console.ReadKey();
+                return;
+            }
+
+            comment.Content = newContent;
+            comment.LastModified = DateTime.UtcNow;
+
+            var responseResult = _commentRepository.Update(comment);
+            if (responseResult == ResponseResultType.Success)
+            {
+                file.LastModifiedAt = DateTime.UtcNow;
+                _fileRepository.Update(file);
+                Console.WriteLine("Comment updated successfully!");
+                Console.ReadKey();
+            }
+            else
+            {
+                Console.WriteLine("Failed to update the comment. Please try again.");
+                Console.ReadKey();
+            }
+            EditFileProcess(file, user);
+        }
+
+
     }    
 }

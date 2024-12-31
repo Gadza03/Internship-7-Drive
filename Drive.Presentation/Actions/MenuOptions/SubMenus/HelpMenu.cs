@@ -24,7 +24,8 @@ namespace Drive.Presentation.Actions.MenuOptions.SubMenus
             Console.WriteLine("\nFile Editor Commands:\n" +
                         ":help - Display all commands\n" +
                         ":save and exit - Save changes and exit\n" +
-                        ":exit - Exit without saving\n");
+                        ":exit - Exit without saving\n" +
+                        ":open comments - Open all comments related to file\n");
         }
         public static void DisplayEditSharedItemsCommands()
         {
@@ -33,7 +34,7 @@ namespace Drive.Presentation.Actions.MenuOptions.SubMenus
                     "enter.folder ‘folder name’ – Navigates into the specified folder.\n" +
                     "edit.file ‘file name’ – Edits the specified file.\n" +
                     "delete.f ‘folder or file name’ – Deletes the specified folder or file.\n" +
-                    "rename.f ‘folder or file name’ to ‘new name’ – Renames the specified folder or file.\n" +                    
+                    "rename.f ‘folder or file name’ to ‘new name’ – Renames the specified folder or file.\n" +
                     "back – Returns to the previous folder.\n");
         }
 
@@ -43,7 +44,9 @@ namespace Drive.Presentation.Actions.MenuOptions.SubMenus
                    "help – Displays all available commands.\n" +
                    "add.c 'comment-id' - Create new comment for file\n" +
                    "edit.c 'comment-id' – Edits the specified comment.\n" +
-                   "delete.c 'comment-id' – Deletes the specified comment.\n");
+                   "delete.c 'comment-id' – Deletes the specified comment.\n" +
+                   "back – Returns to the previous folder.\n");
+
         }
     }
 }

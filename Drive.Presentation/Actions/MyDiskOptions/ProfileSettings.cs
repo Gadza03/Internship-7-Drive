@@ -1,6 +1,8 @@
 ﻿using Drive.Data.Entities.Models;
 using Drive.Domain.Repositories;
 using Drive.Presentation.Abstractions;
+using Drive.Presentation.Actions.MenuOptions;
+using Drive.Presentation.Actions.MyDiskOptions.ProfileSettingsActions;
 
 
 namespace Drive.Presentation.Actions.MyDiskOptions
@@ -31,6 +33,14 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         {
             Console.WriteLine("Samo da nije password HAHHAH! Disk opcija 3.");
             Console.ReadKey();
+        }
+        private void OpenProfileSettingsMenu()
+        {
+            var profileMenu = new ProfileSettingsMenu
+            {
+                new ChangePassword(_userRepository, _folderRepository, _fileRepository, _shareRepository, _commentRepository, _user),
+                new ChangeEmail(_userRepository, _folderRepository, _fileRepository, _shareRepository, _commentRepository, _user),
+            };
         }
     }
 }

@@ -16,6 +16,17 @@ namespace Drive.Domain.Repositories
             DbContext.Comments.Add(comment);
             return SaveChanges();
         }
+        public ResponseResultType Delete(Comment comment)
+        {
+            DbContext.Comments.Remove(comment);
+            return SaveChanges();
+        }
+
+        public ResponseResultType Update(Comment comment)
+        {
+            DbContext.Comments.Update(comment);
+            return SaveChanges();
+        }
         public List<Comment> GetAllComments(File file)
         {
             return DbContext.Comments.Where(c => c.FileId == file.Id).Include(c => c.Author).ToList();

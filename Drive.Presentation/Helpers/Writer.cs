@@ -34,7 +34,7 @@ namespace Drive.Presentation.Helpers
         }
         public static void DisplayComments(Comment comment)
         {
-            Console.WriteLine($"Id: {comment.AuthorId} - {comment.Author?.Email} - {comment.LastModified}\n" +
+            Console.WriteLine($"Id: {comment.Id} - {comment.Author?.Email} - {comment.LastModified}\n" +
                 $"Content:\n{comment.Content}\n");
         }
     }
