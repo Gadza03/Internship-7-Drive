@@ -1,5 +1,4 @@
 ﻿
-
 namespace Drive.Presentation.Utils
 {
     public static class Hash

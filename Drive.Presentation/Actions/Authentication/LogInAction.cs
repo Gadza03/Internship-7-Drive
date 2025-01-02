@@ -2,12 +2,10 @@
 using Drive.Domain.Repositories;
 using Drive.Data.Entities.Models;
 using Drive.Domain.Enums;
-using Drive.Presentation.Utils;
-using Drive.Domain.Factories;
 using Drive.Presentation.Actions.MenuOptions;
 using Drive.Presentation.Actions.MyDiskOptions;
 
-namespace Drive.Presentation.Actions.UserRegister
+namespace Drive.Presentation.Actions.Authentication
 {
 
     public class LogInAction : IAction

@@ -1,11 +1,8 @@
 ﻿
-using File = Drive.Data.Entities.Models.File;
-
 using Drive.Data.Entities;
 using Drive.Data.Entities.Models;
 using Drive.Data.Enums;
 using Drive.Domain.Enums;
-using Drive.Domain.Factories;
 
 namespace Drive.Domain.Repositories
 {
@@ -73,7 +70,6 @@ namespace Drive.Domain.Repositories
         {
             return DbContext.Folders.Any(f => f.Name == name && f.OwnerId == userId && f.ParentFolderId == parentFolderId);
         }
-        
         public List<Folder> GetFileByParentFolderAndOwner(Folder parentFolder, User owner)
         {
             return DbContext.Folders.Where(f => f.ParentFolderId == parentFolder.Id && f.OwnerId == owner.Id).ToList();

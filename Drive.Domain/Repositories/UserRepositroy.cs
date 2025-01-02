@@ -20,7 +20,6 @@ namespace Drive.Domain.Repositories
             DbContext.Users.Update(user);
             return SaveChanges();
         }
-
         public bool IsPasswordValid(string password, out string errorMessage)
         {
             errorMessage = "";
@@ -69,7 +68,7 @@ namespace Drive.Domain.Repositories
                 return ResponseResultType.Success; 
             return ResponseResultType.NotFound;
         }
-        private bool VerifyPassword(string password, string hashedPassword)
+        private bool VerifyPassword(string password, string? hashedPassword)
         {
             return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }

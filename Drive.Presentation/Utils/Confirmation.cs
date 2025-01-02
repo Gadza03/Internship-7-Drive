@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Drive.Presentation.Actions.MyDiskOptions
+﻿
+namespace Drive.Presentation.Utils
 {
     public static class Confirmation
     {
@@ -18,10 +13,20 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                     return true;
                 else if (choice == "n")
                     return false;
-                
+
                 Console.WriteLine("Invalid input type 'y' or 'n'. Try again.");
-                Console.ReadKey();                   
+                Console.ReadKey();
             }
+        }
+
+        public static bool ConfiramtionResponse(string prompt)
+        {
+            if (!ConfirmationDialog(prompt))
+            {
+                Console.WriteLine($"Canceled {prompt} action.");
+                return false;
+            }
+            return true;
         }
     }
 }

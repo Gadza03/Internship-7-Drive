@@ -1,9 +1,9 @@
 ﻿using Drive.Data.Entities.Models;
 using Drive.Domain.Repositories;
 using Drive.Presentation.Abstractions;
-using Drive.Presentation.Actions.UserRegister;
+using Drive.Presentation.Actions.Authentication;
+using Drive.Presentation.Actions.MyDiskOptions.Command;
 using Drive.Presentation.Helpers;
-using File = Drive.Data.Entities.Models.File;
 
 namespace Drive.Presentation.Actions.MyDiskOptions
 {
@@ -15,7 +15,6 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         private readonly ShareRepository _shareRepository;
         private readonly CommentRepository _commentRepository;
         private User _user { get; set; }
-
         public SharedWithMe(UserRepositroy userRepositroy, FolderRepository folderRepository, FileRepository fileRepository, ShareRepository shareRepository, CommentRepository commentRepository,User user)
         {
             _userRepository = userRepositroy;
@@ -28,7 +27,6 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         }
         public string Name { get; set; } = "Shared With Me";
         public int MenuIndex { get; set; }
-
         public void Open()
         {
             Console.Clear();
@@ -49,7 +47,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             foreach (var file in sharedFiles)            
                 Writer.DisplaySharedFile(file);
 
-            var commandPromptEdit = new CommandAction(_userRepository, _folderRepository, _fileRepository, _shareRepository, _commentRepository);
+            var commandPromptEdit = new CommandSharedAction(_userRepository, _folderRepository, _fileRepository, _shareRepository, _commentRepository);
             commandPromptEdit.CommandPromptForEditShare(_user, sharedFolders, sharedFiles);           
 
 

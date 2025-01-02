@@ -1,5 +1,4 @@
-﻿using Drive.Presentation.Actions;
-namespace Drive.Presentation.Abstractions
+﻿namespace Drive.Presentation.Abstractions
 {
     public class BaseMenuAction : IMenuAction
     {

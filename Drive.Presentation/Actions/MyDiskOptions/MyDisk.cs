@@ -4,7 +4,9 @@ using Drive.Domain.Repositories;
 using Drive.Presentation.Abstractions;
 using Drive.Presentation.Helpers;
 using Drive.Presentation.Utils;
+using Drive.Presentation.Actions.MyDiskOptions.Command;
 using File = Drive.Data.Entities.Models.File;
+
 namespace Drive.Presentation.Actions.MyDiskOptions
 {
     public class MyDisk : IAction
@@ -32,10 +34,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         {
             var sortedFolders = _userRepository.GetFoldersOrFiles<Folder>(_user);
             var sortedFiles = _userRepository.GetFoldersOrFiles<File>(_user);
-            Console.Clear();
-            //if (!sortedFolders.Any() && !sortedFiles.Any())
-            //    Console.WriteLine("You don't have any files or folders.");
-
+            Console.Clear();    
             Console.WriteLine("Your documents: ");
             foreach (var folder in sortedFolders)
             {

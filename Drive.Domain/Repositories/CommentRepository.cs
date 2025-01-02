@@ -10,7 +10,6 @@ namespace Drive.Domain.Repositories
     public class CommentRepository : BaseRepository
     {
         public CommentRepository(DriveDbContext dbContex) : base(dbContex) { }
-
         public ResponseResultType Add(Comment comment)
         {
             DbContext.Comments.Add(comment);
@@ -21,7 +20,6 @@ namespace Drive.Domain.Repositories
             DbContext.Comments.Remove(comment);
             return SaveChanges();
         }
-
         public ResponseResultType Update(Comment comment)
         {
             DbContext.Comments.Update(comment);
@@ -31,7 +29,6 @@ namespace Drive.Domain.Repositories
         {
             return DbContext.Comments.Where(c => c.FileId == file.Id).Include(c => c.Author).ToList();
         }
-
         public Comment? GetCommentById(File file, int? id)
         {
             return DbContext.Comments.FirstOrDefault(c => c.FileId == file.Id && c.Id == id);

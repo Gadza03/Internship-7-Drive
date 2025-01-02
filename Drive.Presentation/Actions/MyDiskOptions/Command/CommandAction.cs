@@ -1,18 +1,15 @@
-﻿
-using File = Drive.Data.Entities.Models.File;
+﻿using File = Drive.Data.Entities.Models.File;
 using Drive.Data.Entities.Models;
 using Drive.Data.Enums;
 using Drive.Domain.Enums;
 using Drive.Domain.Repositories;
 using Drive.Presentation.Actions.MenuOptions.SubMenus;
-using Drive.Presentation.Actions.UserRegister;
 using Drive.Presentation.Utils;
 using Drive.Domain.Factories;
-using System.ComponentModel.DataAnnotations;
-using System.Net;
 using Drive.Presentation.Helpers;
+using Drive.Presentation.Actions.Authentication;
 
-namespace Drive.Presentation.Actions.MyDiskOptions
+namespace Drive.Presentation.Actions.MyDiskOptions.Command
 {
     public class CommandAction
     {
@@ -135,11 +132,9 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         }
         private void CreateFolder(string name, User user, int parentFolderId)
         {
-            if (!Confirmation.ConfirmationDialog("create folder"))
-            {
-                Console.WriteLine("Canceled create action.");
+            if (!Confirmation.ConfiramtionResponse("create folder"))
                 return;
-            }
+
             _folderRepository.CreateFolder(name, user.Id, parentFolderId);
             Console.WriteLine("Successfully added folder.");
             Console.ReadKey();
@@ -148,11 +143,8 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         }
         private void CreateFile(string name, User user, int folderId)
         {
-            if (!Confirmation.ConfirmationDialog("create file"))
-            {
-                Console.WriteLine("Canceled create action.");
+            if (!Confirmation.ConfiramtionResponse("create file"))
                 return;
-            }
             _fileRepository.CreateFile(name, user.Id, folderId);
             Console.WriteLine("Successfully added file.");
             Console.ReadKey();
@@ -167,7 +159,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 return;
             }
 
-            var enteredFolder = _folderRepository.GetFolderByNameAndParentFolder(name, user, CurrentFolder?.Id ?? 0);            
+            var enteredFolder = _folderRepository.GetFolderByNameAndParentFolder(name, user, CurrentFolder?.Id ?? 0);
             if (enteredFolder == null)
             {
                 Console.WriteLine($"Folder '{name}' does not exist in the current context (Parent Folder: '{CurrentFolder?.Name ?? "None"}').");
@@ -205,15 +197,15 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         private void DeleteFolder(Folder folder, User user)
         {
 
-            if (!Confirmation.ConfirmationDialog("delete folder"))
-            {
-                Console.WriteLine("Canceled delete action.");
+            if (!Confirmation.ConfiramtionResponse("delete folder"))
                 return;
-            }
             var responseResult = _folderRepository.Delete(folder);
             if (responseResult == ResponseResultType.Success)
-            {
+            {                
                 Console.WriteLine("Successfully deleted folder.");
+                if (_shareRepository.DeleteShareByTypeAndItemId(ItemType.Folder, folder.Id) == ResponseResultType.Success)
+                    Console.WriteLine("Folder is deleted from shared items.");
+
                 Console.ReadKey();
                 RefreshCommandPrompt(user);
             }
@@ -221,15 +213,15 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         }
         private void DeleteFile(File file, User user)
         {
-            if (!Confirmation.ConfirmationDialog("delete file"))
-            {
-                Console.WriteLine("Canceled delete action.");
+            if (!Confirmation.ConfiramtionResponse("delete file"))
                 return;
-            }
             var responseResult = _fileRepository.Delete(file);
             if (responseResult == ResponseResultType.Success)
             {
                 Console.WriteLine("Successfully deleted file.");
+                if (_shareRepository.DeleteShareByTypeAndItemId(ItemType.File, file.Id) == ResponseResultType.Success)
+
+                    Console.WriteLine("Folder is deleted from shared items.");
                 Console.ReadKey();
                 RefreshCommandPrompt(user);
             }
@@ -244,7 +236,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             }
             EditFileProcess(file, user);
         }
-        private void EditFileProcess(File file, User user)
+        public void EditFileProcess(File file, User user)
         {
             Console.Clear();
             Console.WriteLine($"Editing file - {file.Name}: \nType :help for a list of commands.\n");
@@ -265,7 +257,8 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                         string command = currentLine.Substring(1).Trim();
                         if (command == "open comments")
                         {
-                            CommandPromptForComments(file, user);
+                            var commentPrompt = new CommandCommentAction(_userRepository, _folderRepository, _fileRepository, _shareRepository, _commentRepository);
+                            commentPrompt.CommandPromptForComments(file, user);
                             break;
                         }
                         if (HandleCommand(command, ref lines, file, ref isSaved))
@@ -305,16 +298,13 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 }
             }
             Console.WriteLine(isSaved ? "File saved successfully." : "Changes were not saved.");
-            if (user.Id == file.OwnerId)
-            {
-                RefreshCommandPrompt(user);
-            }
+            if (user.Id == file.OwnerId)            
+                RefreshCommandPrompt(user);            
             else
             {
-                RefreshCommandPromptForEditShare(user);
+                var sharedPrompt = new CommandSharedAction(_userRepository, _folderRepository, _fileRepository, _shareRepository, _commentRepository);
+                sharedPrompt.RefreshCommandPromptForEditShare(user);
             }
-
-            
         }
         private bool HandleCommand(string command, ref List<string> lines, File file, ref bool isSaved)
         {
@@ -332,7 +322,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                     return true;
                 case "exit":
                     Console.WriteLine("\nExiting without saving...");
-                    return true;               
+                    return true;
 
                 default:
                     Console.WriteLine("\nUnknown command. Type :help for a list of commands.");
@@ -341,6 +331,12 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         }
         public void RenameItem(string currentName, User user)
         {
+            var file = _fileRepository.GetFileByNameAndFolder(currentName, user, CurrentFolder.Id);
+            if (file != null)
+            {
+                RenameFile(file, user);
+                return;
+            }
             if (currentName == "Root")
             {
                 Console.WriteLine("You can't rename Root folder.");
@@ -352,12 +348,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 RenameFolder(folder, user);
                 return;
             }
-            var file = _fileRepository.GetFileByNameAndFolder(currentName, user, CurrentFolder.Id);
-            if (file != null)
-            {
-                RenameFile(file, user);
-                return;
-            }
+
 
             Console.WriteLine("The item with the specified name does not exist.");
         }
@@ -388,7 +379,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         private void RenameFile(File file, User user)
         {
             Console.Write($"Selected file: {file.Name}\nEnter new name: ");
-            var newName = Console.ReadLine().Trim();
+            var newName = Console.ReadLine()?.Trim() ?? string.Empty;
 
             var responseResult = _folderRepository.ValidateItemName(ItemType.File, newName, file.OwnerId, file.FolderId, _fileRepository);
             if (responseResult != ResponseResultType.Success)
@@ -408,10 +399,10 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             Console.ReadKey();
             RefreshCommandPrompt(user);
         }
-        private void ShareItem(string email, string nameOfItem, User userSharedBy)
+        private void ShareItem(string email, string nameOfItem, User sharedByUser)
         {
-            var userForShare = _userRepository.GetUserByMail(email);
-            if (userForShare == null)
+            var sharedWithUser = _userRepository.GetUserByMail(email);
+            if (sharedWithUser == null)
             {
                 Console.WriteLine($"User with email: {email} doesn't exists.");
                 return;
@@ -421,16 +412,17 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 Console.WriteLine("You can't Share Root folder.");
                 return;
             }
-            var folder = _folderRepository.GetFolderByNameAndParentFolder(nameOfItem, userSharedBy, CurrentFolder.Id);
+            var folder = _folderRepository.GetFolderByNameAndParentFolder(nameOfItem, sharedByUser, CurrentFolder.Id);            
             if (folder != null)
-            {
-                ShareFolder(folder, userSharedBy, userForShare);
+            {                
+                ShareFolder(folder, sharedByUser, sharedWithUser);
                 return;
             }
-            var file = _fileRepository.GetFileByNameAndFolder(nameOfItem, userSharedBy, CurrentFolder.Id);
+            var file = _fileRepository.GetFileByNameAndFolder(nameOfItem, sharedByUser, CurrentFolder.Id);
             if (file != null)
             {
-                ShareFile(file, userSharedBy, userForShare);
+                
+                ShareFile(file, sharedByUser, sharedWithUser);
                 return;
             }
 
@@ -438,7 +430,12 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         }
         private void ShareFolder(Folder folder, User sharedByUser, User sharedWithUser)
         {
-
+            var shareExists = _shareRepository.IsSharedItemExists(ItemType.Folder, folder.Id, sharedByUser, sharedWithUser);
+            if (shareExists)
+            {
+                Console.WriteLine($"Folder {folder.Name} is already shared with {sharedWithUser.Email}.");
+                return;
+            }
             var share = new Share
             {
                 ItemId = folder.Id,
@@ -464,6 +461,12 @@ namespace Drive.Presentation.Actions.MyDiskOptions
         }
         private void ShareFile(File file, User sharedByUser, User sharedWithUser)
         {
+            var shareExists = _shareRepository.IsSharedItemExists(ItemType.File, file.Id, sharedByUser, sharedWithUser);
+            if (shareExists)
+            {
+                Console.WriteLine($"File {file.Name} is already shared with {sharedWithUser.Email}.");
+                return;
+            }
             var share = new Share
             {
                 ItemId = file.Id,
@@ -508,7 +511,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             var response = _shareRepository.Delete(share);
             Console.WriteLine($"Folder: {folder.Name} it no longer shared with {sharedWithUser.Name}.");
             var filesInFolder = _fileRepository.GetFileByFolderAndOwner(folder, sharedByUser);
-            foreach ( var file in filesInFolder)
+            foreach (var file in filesInFolder)
             {
                 StopSharingFile(file, sharedByUser, sharedWithUser);
             }
@@ -530,295 +533,6 @@ namespace Drive.Presentation.Actions.MyDiskOptions
             }
             var response = _shareRepository.Delete(share);
             Console.WriteLine($"File: {file.Name} it no longer shared with {sharedWithUser.Name}.");
-        }        
-
-        public void CommandPromptForEditShare(User user, IEnumerable<Folder> sharedFolders, IEnumerable<File> sharedFiles)
-        {          
-            while (true)
-            {
-                Console.Write("\nEnter a command (help - for list of commands): ");
-                string input = Console.ReadLine()?.Trim() ?? "";
-                string[] parts = !string.IsNullOrEmpty(input) ? input.Split(" ") : Array.Empty<string>();
-                if (parts.Length < 1)
-                {
-                    Console.WriteLine("Invalid input, try again");
-                    continue;
-                }
-
-                var name = string.Join(" ", parts.Skip(1));
-                switch (parts[0])
-                {
-                    case "help":
-                        HelpMenu.DisplayEditSharedItemsCommands();
-                        break;                                          
-                    case "enter.folder":
-                        EnterSharedFolder(name, user, sharedFolders);
-                        break;
-                    case "edit.file":
-                        EditSharedFile(name, user, sharedFiles);
-                        break;
-                    case "delete.f":
-                        DeleteSharedItem(name, user, sharedFolders, sharedFiles);
-                        break;                    
-                    case "back":
-                        var logInMenu = new LogInAction(_userRepository, _folderRepository, _fileRepository, _shareRepository, _commentRepository);
-                        logInMenu.OpenDiskMenu(user);
-                        break;
-                    default:
-                        Console.WriteLine("Invalid input, try again.");
-                        Console.ReadKey();
-                        continue;
-                }
-            }
         }
-        private void RefreshCommandPromptForEditShare(User user)
-        {
-            var refreshFiles = new SharedWithMe(RepositoryFactory.Create<UserRepositroy>(), RepositoryFactory.Create<FolderRepository>(), RepositoryFactory.Create<FileRepository>(), RepositoryFactory.Create<ShareRepository>(), RepositoryFactory.Create<CommentRepository>(), user);
-            refreshFiles.Open();
-        }
-        private void EnterSharedFolder(string name, User user, IEnumerable<Folder> sharedFolders)
-        {
-            
-            var sharedFolder = sharedFolders.FirstOrDefault(s => s.Name == name);
-            if (sharedFolder == null)
-            {
-                Console.WriteLine("The entered folder does not exist in your shared items.");
-                return;
-            }
-
-            CurrentFolder = sharedFolder;
-            Console.WriteLine($"You entered shared folder - {CurrentFolder?.Name}");
-        }
-        private void EditSharedFile(string name, User user, IEnumerable<File> sharedFiles)
-        {            
-            var file = _shareRepository.GetSharedFileByNameAndParentFolder(sharedFiles, name, CurrentFolder?.Id ?? 0);
-            if (file is null)
-            {
-                Console.WriteLine("Entered name of File doesn't exist.");
-                return;
-            }
-            EditFileProcess(file, user);
-        }
-        private void DeleteSharedItem(string name, User user, IEnumerable<Folder> sharedFolders, IEnumerable<File> sharedFiles)
-        {
-            var folderToDelete = _shareRepository.GetSharedFolderByNameAndParentFolder(sharedFolders, name, CurrentFolder?.Id ?? 0);
-            if (folderToDelete != null)
-            {
-                DeleteSharedFolder(folderToDelete, user);
-                return;
-            }
-
-            var fileToDelete = _shareRepository.GetSharedFileByNameAndParentFolder(sharedFiles, name, CurrentFolder?.Id ?? 0);
-            if (fileToDelete != null)
-            {
-                DeleteSharedFile(fileToDelete, user);
-                return;
-            }
-
-            Console.WriteLine("The item with the specified name does not exist.");
-        }
-        private void DeleteSharedFolder(Folder folder, User user)
-        {
-            if (!Confirmation.ConfirmationDialog("delete file"))
-            {
-                Console.WriteLine("Canceled delete action!");
-                return;
-            }
-            var responseResult = _shareRepository.DeleteFolderFromShareWith(folder, user);
-
-            if (responseResult == ResponseResultType.Success)
-            {
-                Console.WriteLine("Successfully deleted folder from Shared With Me.");
-                Console.ReadKey();
-                RefreshCommandPromptForEditShare(user);
-            }
-            else
-                Console.WriteLine(ResponseHandler.ErrorMessage(responseResult));
-        }
-        private void DeleteSharedFile(File file, User user)
-        {
-            if (!Confirmation.ConfirmationDialog("delete file"))
-            {
-                Console.WriteLine("Canceled delete action!");
-                return;
-            }
-            var responseResult = _shareRepository.DeleteFileFromShareWith(file, user);
-
-            if (responseResult == ResponseResultType.Success)
-            {
-                Console.WriteLine("Successfully deleted file from Shared With Me.");
-                Console.ReadKey();
-                RefreshCommandPromptForEditShare(user);
-            }
-            else
-                Console.WriteLine(ResponseHandler.ErrorMessage(responseResult));           
-
-        }
-
-        public void CommandPromptForComments(File file, User user)
-        {
-            Console.Clear();
-            var allComments = _commentRepository.GetAllComments(file);
-            if (!allComments.Any())
-            {
-                Console.WriteLine("This file doesn't have any comments.");                
-            }
-            else
-            {
-                foreach (var comment in allComments)
-                    Writer.DisplayComments(comment);
-            }
-            
-
-            while (true)
-            {
-                Console.Write("\nEnter a command for comments (help - for list of commands): ");
-                string input = Console.ReadLine()?.Trim() ?? "";
-                string[] parts = !string.IsNullOrEmpty(input) ? input.Split(" ") : Array.Empty<string>();
-                if (parts.Length < 1)
-                {
-                    Console.WriteLine("Invalid input, try again");
-                    continue;
-                }
-                var commentId = string.Join(" ", parts.Skip(1));
-                var parsedId = _commentRepository.ValidId(commentId);
-               
-                
-                switch (parts[0])
-                {
-                    case "help":
-                        HelpMenu.DisplayCommentCommands();
-                        break;
-                    case "add.c":
-                        AddComment(file, user);
-                        break;
-                    case "edit.c":
-                        if (parsedId is null)
-                        {
-                            Console.WriteLine("Invalid format of id, have to be number.");
-                            break;
-                        }
-                        EditComment(file,user,parsedId);
-                        break;
-                    case "delete.c":
-                        if (parsedId is null)
-                        {
-                            Console.WriteLine("Invalid format of id, have to be number.");
-                            break;
-                        }
-                        DeleteComment(file,user,parsedId);
-                        break;
-                    case "back":
-                        EditFileProcess(file, user);
-                        break;
-                    default:
-                        Console.WriteLine("Invalid input, try again (help - for a list of commands).");
-                        Console.ReadKey();
-                        continue;
-                }
-            }
-        }
-
-        private void AddComment(File file,  User author)
-        {            
-            string? newCommentContent;
-            while (true)
-            {
-                Console.WriteLine("Enter a new comment: ");
-                newCommentContent = Console.ReadLine();
-                if (!string.IsNullOrEmpty(newCommentContent))
-                    break;
-                Console.WriteLine("Invalid input, new content cannot be empty.");
-            }
-            var newCommnet = new Comment
-            {
-                Content = newCommentContent,
-                FileId = file.Id,
-                AuthorId = author.Id,
-                CreatedAt = DateTime.UtcNow,
-                LastModified = DateTime.UtcNow
-            };            
-            var responseResult = _commentRepository.Add(newCommnet);
-            if (responseResult == ResponseResultType.Success)
-            {
-                file.LastModifiedAt = DateTime.UtcNow;
-                _fileRepository.Update(file);
-                Console.WriteLine($"Succesfully added comment in '{file.Name}' file.");
-                Console.ReadKey();
-            }
-            EditFileProcess(file, author);
-        }
-        private void DeleteComment(File file, User user, int? commentId)
-        {
-            var commentWithId = _commentRepository.GetCommentById(file, commentId);
-            if (commentWithId is null)
-            {
-                Console.WriteLine($"Comment with id - {commentId} doesn't exists for this file.");
-                return;
-            }
-            if (commentWithId.AuthorId != user.Id)
-            {
-                Console.WriteLine("You can't delete a comment that isn't yours.");
-                return;
-            }
-            var responseResult = _commentRepository.Delete(commentWithId);
-
-            if (responseResult == ResponseResultType.Success)
-            {
-                file.LastModifiedAt = DateTime.UtcNow;
-                _fileRepository.Update(file);
-                Console.WriteLine($"Succesfully deleted comment in '{file.Name}' file.");
-                Console.ReadKey();
-            }          
-
-            EditFileProcess(file, user);
-        }
-        private void EditComment(File file, User user, int? commentId)
-        {
-            
-            var comment = _commentRepository.GetCommentById(file, commentId);
-            if (comment is null)
-            {
-                Console.WriteLine($"Comment with id - {commentId} doesn't exist for this file.");
-                return;
-            }
-            if (comment.AuthorId != user.Id)
-            {
-                Console.WriteLine("You can't change a comment that isn't yours.");
-                return;
-            }
-            Console.WriteLine($"Current comment content: {comment.Content}");
-            Console.Write("Edit the comment (the current content is preloaded): ");
-
-            string newContent = Console.ReadLine()?.Trim() ?? comment.Content;
-
-
-            if (string.IsNullOrEmpty(newContent))
-            {
-                Console.WriteLine("Comment cannot be empty. Keeping the original content.");
-                Console.ReadKey();
-                return;
-            }
-
-            comment.Content = newContent;
-            comment.LastModified = DateTime.UtcNow;
-
-            var responseResult = _commentRepository.Update(comment);
-            if (responseResult == ResponseResultType.Success)
-            {
-                file.LastModifiedAt = DateTime.UtcNow;
-                _fileRepository.Update(file);
-                Console.WriteLine("Comment updated successfully!");
-                Console.ReadKey();
-            }
-            else
-            {
-                Console.WriteLine("Failed to update the comment. Please try again.");
-                Console.ReadKey();
-            }
-            EditFileProcess(file, user);
-        }
-
-
-    }    
+    }
 }

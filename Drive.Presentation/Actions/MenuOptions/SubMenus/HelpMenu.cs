@@ -42,7 +42,7 @@ namespace Drive.Presentation.Actions.MenuOptions.SubMenus
         {
             Console.WriteLine("\nAvailable Commands:\n" +
                    "help – Displays all available commands.\n" +
-                   "add.c 'comment-id' - Create new comment for file\n" +
+                   "add.c - Create new comment for file\n" +
                    "edit.c 'comment-id' – Edits the specified comment.\n" +
                    "delete.c 'comment-id' – Deletes the specified comment.\n" +
                    "back – Returns to the previous folder.\n");

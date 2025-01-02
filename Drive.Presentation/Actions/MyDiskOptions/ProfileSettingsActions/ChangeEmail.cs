@@ -1,9 +1,8 @@
 ﻿
 using Drive.Data.Entities.Models;
-using Drive.Domain.Enums;
 using Drive.Domain.Repositories;
 using Drive.Presentation.Abstractions;
-using Drive.Presentation.Actions.UserRegister;
+using Drive.Presentation.Actions.Authentication;
 
 namespace Drive.Presentation.Actions.MyDiskOptions.ProfileSettingsActions
 {
@@ -14,7 +13,6 @@ namespace Drive.Presentation.Actions.MyDiskOptions.ProfileSettingsActions
         private readonly FileRepository _fileRepository;
         private readonly ShareRepository _shareRepository;
         private readonly CommentRepository _commentRepository;
-
         private User _user { get; set; }
         public ChangeEmail(UserRepositroy userRepositroy, FolderRepository folderRepository, FileRepository fileRepository, ShareRepository shareRepository, CommentRepository commentRepository, User user)
         {
@@ -25,10 +23,8 @@ namespace Drive.Presentation.Actions.MyDiskOptions.ProfileSettingsActions
             _shareRepository = shareRepository;
             _commentRepository = commentRepository;
         }
-        
         public string Name { get; set; } = "Change Email";
         public int MenuIndex { get; set; }
-
         public void Open()
         {
             ChangeProfileParts.RepeatLogIn(_user, _userRepository);

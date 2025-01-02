@@ -2,7 +2,7 @@
 using Drive.Data.Entities.Models;
 using Drive.Domain.Enums;
 using Drive.Domain.Repositories;
-using Drive.Presentation.Actions.UserRegister;
+using Drive.Presentation.Actions.Authentication;
 
 namespace Drive.Presentation.Actions.MyDiskOptions.ProfileSettingsActions
 {

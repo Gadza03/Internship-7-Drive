@@ -5,7 +5,6 @@ using Drive.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using File = Drive.Data.Entities.Models.File;
 
-
 namespace Drive.Domain.Repositories
 {
     public class ShareRepository : BaseRepository
@@ -27,7 +26,6 @@ namespace Drive.Domain.Repositories
         {
             return DbContext.SharedItems.FirstOrDefault(s => s.SharedById == sharedBy.Id && s.SharedWithId == sharedWith.Id && s.ItemId == itemId);
         }
-
         public IEnumerable<Folder> GetSharedFoldersWithUser(User user)
         {
             return DbContext.SharedItems
@@ -41,7 +39,6 @@ namespace Drive.Domain.Repositories
                 .OrderBy(folder => folder.Name)
                 .ToList();
         }
-
         public ResponseResultType DeleteFolderFromShareWith(Folder folder, User sharedWithUser)
         {
             var sharedItems = DbContext.SharedItems.Where(si => si.ItemId == folder.Id && si.SharedWithId == sharedWithUser.Id).ToList();
@@ -72,9 +69,7 @@ namespace Drive.Domain.Repositories
                 return Delete(share);            
 
             return ResponseResultType.NotFound;
-        }
-
-
+        }        
         public IEnumerable<File> GetSharedFilesWithUser(User user)
         {
             return DbContext.SharedItems
@@ -88,7 +83,20 @@ namespace Drive.Domain.Repositories
                 .OrderByDescending(file => file.LastModifiedAt)
                 .ToList();
         }
-
+        public bool IsSharedItemExists(ItemType type, int itemId, User sharedBy, User sharedWith)
+        {
+            return DbContext.SharedItems.Any(s => s.ItemId == itemId && s.ItemType == type &&
+                                                s.SharedById == sharedBy.Id && s.SharedWithId == sharedWith.Id);
+        }
+        public ResponseResultType DeleteShareByTypeAndItemId(ItemType type, int itemId)
+        {
+            var share = DbContext.SharedItems.FirstOrDefault(s => s.ItemType == type && s.ItemId == itemId);
+            if (share != null)
+            { 
+                return Delete(share);
+            }
+            return ResponseResultType.NotFound;
+        }
         public File? GetSharedFileByNameAndParentFolder(IEnumerable<File> sharedFiles, string name, int parentFolderId)
         {
             if (parentFolderId == 0)
@@ -97,7 +105,6 @@ namespace Drive.Domain.Repositories
             }
             return sharedFiles.FirstOrDefault(f => f.Name == name && f.FolderId == parentFolderId);
         }
-
         public Folder? GetSharedFolderByNameAndParentFolder(IEnumerable<Folder> sharedFolders, string name, int parentFolderId)
         {
             if (parentFolderId == 0)

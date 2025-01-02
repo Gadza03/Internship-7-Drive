@@ -1,6 +1,4 @@
-﻿
-
-using Drive.Domain.Enums;
+﻿using Drive.Domain.Enums;
 
 namespace Drive.Presentation.Utils
 {

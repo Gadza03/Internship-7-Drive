@@ -5,7 +5,7 @@ using Drive.Domain.Enums;
 using Drive.Presentation.Utils;
 
 
-namespace Drive.Presentation.Actions.UserRegister
+namespace Drive.Presentation.Actions.Authentication
 {
     public class RegisterAction : IAction
     {
