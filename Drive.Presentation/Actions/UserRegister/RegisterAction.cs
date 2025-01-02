@@ -54,14 +54,12 @@ namespace Drive.Presentation.Actions.UserRegister
                 Program.OpenMainMenu();
             }               
 
-        }
-        
-        private string EnterNewMail()
+        }        
+        public string EnterNewMail()
         {
             while (true)
             {
-                Console.Clear();
-                Console.Write("Enter your mail: ");
+                Console.Write("Enter your new mail: ");
                 var email = Console.ReadLine() ?? "";
                 if (!_userRepository.IsValidEmail(email))
                 {
@@ -75,8 +73,7 @@ namespace Drive.Presentation.Actions.UserRegister
                 Console.WriteLine("The email is already in use. Try again");
                 Console.ReadKey();
             }
-        }
-        
+        }        
         private string EnterNewName(string prompt)
         {
             while (true)
@@ -89,11 +86,10 @@ namespace Drive.Presentation.Actions.UserRegister
                 Console.ReadKey();
             }
         }
-        private string EnterNewPassword()
+        public string EnterNewPassword()
         {
             while (true)
-            {
-                Console.Clear();
+            {                
                 Console.WriteLine("Enter your new password: ");
                 var password = Console.ReadLine() ?? "";
                 if (_userRepository.IsPasswordValid(password, out var errorMessage))                
@@ -103,7 +99,7 @@ namespace Drive.Presentation.Actions.UserRegister
                 Console.ReadKey();
             }
         }
-        private bool IsPasswordMatch(string password)
+        public bool IsPasswordMatch(string password)
         {
             while (true)
             {

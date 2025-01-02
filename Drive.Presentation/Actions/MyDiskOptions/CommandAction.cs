@@ -756,6 +756,11 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 Console.WriteLine($"Comment with id - {commentId} doesn't exists for this file.");
                 return;
             }
+            if (commentWithId.AuthorId != user.Id)
+            {
+                Console.WriteLine("You can't delete a comment that isn't yours.");
+                return;
+            }
             var responseResult = _commentRepository.Delete(commentWithId);
 
             if (responseResult == ResponseResultType.Success)
@@ -768,7 +773,6 @@ namespace Drive.Presentation.Actions.MyDiskOptions
 
             EditFileProcess(file, user);
         }
-        //treba ga upgradeati
         private void EditComment(File file, User user, int? commentId)
         {
             
@@ -778,7 +782,11 @@ namespace Drive.Presentation.Actions.MyDiskOptions
                 Console.WriteLine($"Comment with id - {commentId} doesn't exist for this file.");
                 return;
             }
-
+            if (comment.AuthorId != user.Id)
+            {
+                Console.WriteLine("You can't change a comment that isn't yours.");
+                return;
+            }
             Console.WriteLine($"Current comment content: {comment.Content}");
             Console.Write("Edit the comment (the current content is preloaded): ");
 

@@ -1,7 +1,9 @@
 ﻿
 using Drive.Data.Entities.Models;
+using Drive.Domain.Enums;
 using Drive.Domain.Repositories;
 using Drive.Presentation.Abstractions;
+using Drive.Presentation.Actions.UserRegister;
 
 namespace Drive.Presentation.Actions.MyDiskOptions.ProfileSettingsActions
 {
@@ -24,12 +26,18 @@ namespace Drive.Presentation.Actions.MyDiskOptions.ProfileSettingsActions
             _commentRepository = commentRepository;
         }
         
-        public string Name { get; set; } = "Change Password";
+        public string Name { get; set; } = "Change Email";
         public int MenuIndex { get; set; }
 
         public void Open()
         {
-
+            ChangeProfileParts.RepeatLogIn(_user, _userRepository);
+            Console.WriteLine("Changing email: \n");
+            Console.Clear();
+            var registerProces = new RegisterAction(_userRepository, _folderRepository, _fileRepository);
+            var newEmail = registerProces.EnterNewMail();            
+            _user.Email = newEmail;
+            ChangeProfileParts.UpdateUserInfo(_user, _userRepository, _folderRepository, _fileRepository, _shareRepository, _commentRepository);
         }
     }
 }

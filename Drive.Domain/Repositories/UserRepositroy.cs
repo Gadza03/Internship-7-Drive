@@ -3,8 +3,6 @@ using Drive.Domain.Enums;
 using Drive.Data.Entities.Models;
 using System.Text.RegularExpressions;
 
-
-
 namespace Drive.Domain.Repositories
 {
     public class UserRepositroy : BaseRepository
@@ -17,6 +15,12 @@ namespace Drive.Domain.Repositories
             DbContext.Users.Add(user);
             return SaveChanges();
         }
+        public ResponseResultType Update(User user)
+        {
+            DbContext.Users.Update(user);
+            return SaveChanges();
+        }
+
         public bool IsPasswordValid(string password, out string errorMessage)
         {
             errorMessage = "";
@@ -53,6 +57,12 @@ namespace Drive.Domain.Repositories
             var foundedUser = DbContext.Users.FirstOrDefault(u => u.Email == email.Trim());
             return foundedUser;  
         }
+        public bool IsEmailMatching(User user, string email)
+        {
+            if (user.Email == email)            
+                return true;
+            return false;
+        }
         public ResponseResultType IsPasswordValid(User user, string password)
         {
             if(VerifyPassword(password, user.PasswordHash))
@@ -70,8 +80,6 @@ namespace Drive.Domain.Repositories
 
             return DbContext.Files.Where(u => u.OwnerId == user.Id).OrderByDescending(f => f.LastModifiedAt).Cast<T>().ToList();
         }
-        
-
         public User? GetUserByMail(string email)
         {
             return DbContext.Users.FirstOrDefault(u => u.Email == email);
