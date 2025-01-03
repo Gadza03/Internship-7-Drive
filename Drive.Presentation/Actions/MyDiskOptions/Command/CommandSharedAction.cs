@@ -75,7 +75,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions.Command
         private void EnterSharedFolder(string name, User user, IEnumerable<Folder> sharedFolders)
         {
 
-            var sharedFolder = sharedFolders.FirstOrDefault(s => s.Name == name);
+            var sharedFolder = _shareRepository.GetSharedFolderByName(sharedFolders, name);
             if (sharedFolder == null)
             {
                 Console.WriteLine("The entered folder does not exist in your shared items.");
@@ -90,7 +90,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions.Command
             var file = _shareRepository.GetSharedFileByNameAndParentFolder(sharedFiles, name, CurrentFolder?.Id ?? 0);
             if (file is null)
             {
-                Console.WriteLine("Entered name of File doesn't exist.");
+                Console.WriteLine($"Entered name of file doesn't exist in parent folder '{(CurrentFolder?.Name) ?? "None"}'.");
                 return;
             }
             _commandAction.EditFileProcess(file, user);
@@ -111,7 +111,7 @@ namespace Drive.Presentation.Actions.MyDiskOptions.Command
                 return;
             }
 
-            Console.WriteLine("The item with the specified name does not exist.");
+            Console.WriteLine($"The item with the specified name does not exist or not in this parent folder {(CurrentFolder?.Name) ?? "None"}.");
         }
         private void DeleteSharedFolder(Folder folder, User user)
         {

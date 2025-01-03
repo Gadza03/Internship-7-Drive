@@ -6,7 +6,6 @@ using Drive.Presentation.Helpers;
 using Drive.Presentation.Utils;
 using File = Drive.Data.Entities.Models.File;
 
-
 namespace Drive.Presentation.Actions.MyDiskOptions.Command
 {
     public class CommandCommentAction

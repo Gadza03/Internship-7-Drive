@@ -1,5 +1,4 @@
 ﻿using Drive.Data.Enums;
-using System.ComponentModel.DataAnnotations;
 
 namespace Drive.Data.Entities.Models
 {

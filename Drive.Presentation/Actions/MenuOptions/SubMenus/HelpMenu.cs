@@ -13,7 +13,7 @@ namespace Drive.Presentation.Actions.MenuOptions.SubMenus
                      "enter.folder ‘folder name’ – Navigates into the specified folder.\n" +
                      "edit.file ‘file name’ – Edits the specified file.\n" +
                      "delete.f ‘folder or file name’ – Deletes the specified folder or file.\n" +
-                     "rename.f ‘folder or file name’ to ‘new name’ – Renames the specified folder or file.\n" +
+                     "rename.f ‘folder or file name’ – Renames the specified folder or file.\n" +
                      "share.f 'mail' ‘folder or file name’ to share item with other users.\n" +
                      "stop.sharing.f 'mail' ‘folder or file name’ to stop sharing item with other users.\n" + 
                      "back – Returns to the previous folder.\n");
@@ -34,7 +34,6 @@ namespace Drive.Presentation.Actions.MenuOptions.SubMenus
                     "enter.folder ‘folder name’ – Navigates into the specified folder.\n" +
                     "edit.file ‘file name’ – Edits the specified file.\n" +
                     "delete.f ‘folder or file name’ – Deletes the specified folder or file.\n" +
-                    "rename.f ‘folder or file name’ to ‘new name’ – Renames the specified folder or file.\n" +
                     "back – Returns to the previous folder.\n");
         }
 

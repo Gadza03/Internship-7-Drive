@@ -101,7 +101,7 @@ namespace Drive.Domain.Repositories
         {
             if (parentFolderId == 0)
             {
-                return sharedFiles.FirstOrDefault(f => f.Name == name);
+                return null;
             }
             return sharedFiles.FirstOrDefault(f => f.Name == name && f.FolderId == parentFolderId);
         }
@@ -109,9 +109,14 @@ namespace Drive.Domain.Repositories
         {
             if (parentFolderId == 0)
             {
-                return sharedFolders.FirstOrDefault(f => f.Name == name);
+                return null;
             }
             return sharedFolders.FirstOrDefault(f => f.Name == name && f.ParentFolderId == parentFolderId);
         }
+        public Folder? GetSharedFolderByName(IEnumerable<Folder> sharedFolders, string name)
+        {
+            return sharedFolders.FirstOrDefault(sf => sf.Name == name); 
+        }
     }
 }
+

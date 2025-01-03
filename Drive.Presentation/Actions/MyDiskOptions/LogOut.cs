@@ -1,7 +1,6 @@
 ﻿
 using Drive.Presentation.Abstractions;
 
-
 namespace Drive.Presentation.Actions.MyDiskOptions
 {
     public class LogOut : IAction

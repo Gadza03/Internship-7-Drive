@@ -23,13 +23,11 @@ namespace Drive.Domain.Repositories
         public bool IsPasswordValid(string password, out string errorMessage)
         {
             errorMessage = "";
-
             if (string.IsNullOrEmpty(password))
             {
                 errorMessage = "Password cannot be empty.";
                 return false;
             }
-
             if (password.Length < 4)
             {
                 errorMessage = "Password must be at least 4 characters long.";
@@ -41,7 +39,6 @@ namespace Drive.Domain.Repositories
                 errorMessage = "Password must not contain spaces.";
                 return false;
             }
-
             return true;
         }
         public bool IsValidEmail(string email)
