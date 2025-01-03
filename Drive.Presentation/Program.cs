@@ -8,6 +8,7 @@ class Program
 {
     static void Main(string[] args)
     {
+        DisplayWelcomeScreen();
         OpenMainMenu();
     }
 
@@ -20,5 +21,18 @@ class Program
         };
         var mainMenu = new MainMenu(actions);
         mainMenu.Open();
+    }
+
+    private static void DisplayWelcomeScreen()
+    {      
+
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.WriteLine("====================================\n" +
+            "\tWELCOME TO DUMP DRIVE\n" +
+            "====================================");              
+        Console.WriteLine("Manage your files effortlessly.");
+        Console.ResetColor();
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ReadKey(); 
     }
 }
