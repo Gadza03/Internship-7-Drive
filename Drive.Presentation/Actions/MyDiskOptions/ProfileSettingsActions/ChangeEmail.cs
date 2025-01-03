@@ -27,9 +27,9 @@ namespace Drive.Presentation.Actions.MyDiskOptions.ProfileSettingsActions
         public int MenuIndex { get; set; }
         public void Open()
         {
-            ChangeProfileParts.RepeatLogIn(_user, _userRepository);
-            Console.WriteLine("Changing email: \n");
+            ChangeProfileParts.RepeatLogIn(_user, _userRepository);            
             Console.Clear();
+            Console.WriteLine("Changing email: \n");
             var registerProces = new RegisterAction(_userRepository, _folderRepository, _fileRepository);
             var newEmail = registerProces.EnterNewMail();            
             _user.Email = newEmail;
